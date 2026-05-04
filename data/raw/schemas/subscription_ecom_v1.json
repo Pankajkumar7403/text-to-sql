@@ -1,0 +1,80 @@
+{
+  "name": "subscription_ecom_v1",
+  "domain": "ecommerce",
+  "description": "Subscription-box e-commerce with recurring billing",
+  "tables": {
+    "customers": {
+      "columns": [
+        "customer_id INT PK",
+        "email VARCHAR",
+        "signup_date DATE",
+        "referral_source VARCHAR",
+        "ltv DECIMAL(10,2)"
+      ]
+    },
+    "plans": {
+      "columns": [
+        "plan_id INT PK",
+        "name VARCHAR",
+        "price_monthly DECIMAL(8,2)",
+        "billing_cycle VARCHAR",
+        "max_boxes INT"
+      ],
+      "sample_values": {
+        "billing_cycle": [
+          "monthly",
+          "quarterly",
+          "annual"
+        ]
+      }
+    },
+    "subscriptions": {
+      "columns": [
+        "sub_id INT PK",
+        "customer_id INT FK(customers)",
+        "plan_id INT FK(plans)",
+        "status VARCHAR",
+        "start_date DATE",
+        "end_date DATE",
+        "next_billing DATE"
+      ],
+      "sample_values": {
+        "status": [
+          "active",
+          "paused",
+          "cancelled",
+          "past_due"
+        ]
+      }
+    },
+    "shipments": {
+      "columns": [
+        "shipment_id INT PK",
+        "sub_id INT FK(subscriptions)",
+        "shipped_date DATE",
+        "delivered_date DATE",
+        "carrier VARCHAR",
+        "tracking_number VARCHAR"
+      ]
+    },
+    "invoices": {
+      "columns": [
+        "invoice_id INT PK",
+        "sub_id INT FK(subscriptions)",
+        "amount DECIMAL(8,2)",
+        "status VARCHAR",
+        "issued_date DATE",
+        "paid_date DATE"
+      ],
+      "sample_values": {
+        "status": [
+          "paid",
+          "failed",
+          "pending",
+          "refunded"
+        ]
+      }
+    }
+  },
+  "create_sql": "-- Schema: subscription_ecom_v1 (Subscription-box e-commerce with recurring billing)\n\nCREATE TABLE customers (\n  customer_id INT PK,\n  email VARCHAR,\n  signup_date DATE,\n  referral_source VARCHAR,\n  ltv DECIMAL(10,2)\n);\n\nCREATE TABLE plans (\n  plan_id INT PK,\n  name VARCHAR,\n  price_monthly DECIMAL(8,2),\n  billing_cycle VARCHAR,\n  max_boxes INT\n);\n\nCREATE TABLE subscriptions (\n  sub_id INT PK,\n  customer_id INT FK(customers),\n  plan_id INT FK(plans),\n  status VARCHAR,\n  start_date DATE,\n  end_date DATE,\n  next_billing DATE\n);\n\nCREATE TABLE shipments (\n  shipment_id INT PK,\n  sub_id INT FK(subscriptions),\n  shipped_date DATE,\n  delivered_date DATE,\n  carrier VARCHAR,\n  tracking_number VARCHAR\n);\n\nCREATE TABLE invoices (\n  invoice_id INT PK,\n  sub_id INT FK(subscriptions),\n  amount DECIMAL(8,2),\n  status VARCHAR,\n  issued_date DATE,\n  paid_date DATE\n);\n"
+}

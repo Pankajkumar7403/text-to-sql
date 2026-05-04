@@ -1,0 +1,40 @@
+# requirements.txt  —  LOCAL DEV (Windows / Mac / Linux, no GPU needed)
+# Install: uv pip install -r requirements.txt
+# Python 3.11 or 3.12 recommended
+#
+# Covers: data processing, synthetic generation, eval harness, FastAPI server
+# Do NOT use on RunPod — use requirements-training.txt there
+
+# ── Data & utilities ─────────────────────────────────────────────────────────
+datasets>=3.5.0
+pandas>=2.2.3
+tqdm>=4.67.0
+sqlparse>=0.5.3
+duckdb>=1.2.2
+python-dotenv>=1.1.0
+
+# ── LLM clients (baseline eval against GPT-4o / Claude) ─────────────────────
+openai>=1.77.0
+anthropic>=0.52.0
+
+# ── HuggingFace (inference + tokenizer only, no training) ───────────────────
+transformers>=4.51.0
+huggingface-hub>=0.30.2
+tokenizers>=0.21.1
+sentencepiece>=0.2.0
+accelerate>=1.6.0
+
+# ── Experiment tracking ──────────────────────────────────────────────────────
+wandb>=0.19.11
+
+# ── Observability ────────────────────────────────────────────────────────────
+langfuse>=3.14.0
+
+# ── API layer ────────────────────────────────────────────────────────────────
+fastapi[standard]>=0.136.0
+uvicorn[standard]>=0.34.0
+pydantic>=2.11.0
+httpx>=0.28.0
+
+# ── Eval & testing ───────────────────────────────────────────────────────────
+pytest>=8.3.5
