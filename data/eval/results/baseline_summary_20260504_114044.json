@@ -1,0 +1,15 @@
+[
+  {
+    "model": "gpt-4o",
+    "total": 68,
+    "valid_sql_rate_overall": 100.0,
+    "exec_accuracy_overall": 100.0,
+    "avg_latency_s": 0.0,
+    "valid_sql_easy": 100.0,
+    "exec_accuracy_easy": 100.0,
+    "valid_sql_hard": 100.0,
+    "exec_accuracy_hard": 100.0,
+    "valid_sql_medium": 100.0,
+    "exec_accuracy_medium": 100.0
+  }
+]

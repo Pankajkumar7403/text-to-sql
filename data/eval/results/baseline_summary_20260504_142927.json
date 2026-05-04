@@ -1,0 +1,28 @@
+[
+  {
+    "model": "llama-3.3-70b-versatile",
+    "total": 68,
+    "valid_sql_rate_overall": 92.6,
+    "exec_accuracy_overall": 60.3,
+    "avg_latency_s": 0.418,
+    "valid_sql_easy": 100.0,
+    "exec_accuracy_easy": 90.5,
+    "valid_sql_hard": 85.7,
+    "exec_accuracy_hard": 38.1,
+    "valid_sql_medium": 92.3,
+    "exec_accuracy_medium": 53.8
+  },
+  {
+    "model": "qwen-qwq-32b",
+    "total": 68,
+    "valid_sql_rate_overall": 0.0,
+    "exec_accuracy_overall": 0.0,
+    "avg_latency_s": 0.0,
+    "valid_sql_easy": 0.0,
+    "exec_accuracy_easy": 0.0,
+    "valid_sql_hard": 0.0,
+    "exec_accuracy_hard": 0.0,
+    "valid_sql_medium": 0.0,
+    "exec_accuracy_medium": 0.0
+  }
+]

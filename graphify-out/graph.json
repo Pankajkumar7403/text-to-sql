@@ -1,0 +1,1320 @@
+{
+  "directed": false,
+  "multigraph": false,
+  "graph": {},
+  "nodes": [
+    {
+      "label": "main.py",
+      "file_type": "code",
+      "source_file": "main.py",
+      "source_location": "L1",
+      "id": "main_py",
+      "community": 7,
+      "norm_label": "main.py"
+    },
+    {
+      "label": "main()",
+      "file_type": "code",
+      "source_file": "main.py",
+      "source_location": "L1",
+      "id": "text_to_sql_main_main",
+      "community": 7,
+      "norm_label": "main()"
+    },
+    {
+      "label": "build_eval_set.py",
+      "file_type": "code",
+      "source_file": "scripts/build_eval_set.py",
+      "source_location": "L1",
+      "id": "scripts_build_eval_set_py",
+      "community": 6,
+      "norm_label": "build_eval_set.py"
+    },
+    {
+      "label": "build_eval_set()",
+      "file_type": "code",
+      "source_file": "scripts/build_eval_set.py",
+      "source_location": "L867",
+      "id": "scripts_build_eval_set_build_eval_set",
+      "community": 6,
+      "norm_label": "build_eval_set()"
+    },
+    {
+      "label": "Day 2, Part 1 \u2014 Build the golden eval set.  WHY THIS FILE EXISTS:   The golde",
+      "file_type": "rationale",
+      "source_file": "scripts/build_eval_set.py",
+      "source_location": "L1",
+      "id": "scripts_build_eval_set_rationale_1",
+      "community": 6,
+      "norm_label": "day 2, part 1 \u2014 build the golden eval set.  why this file exists:   the golde"
+    },
+    {
+      "label": "download_and_filter.py",
+      "file_type": "code",
+      "source_file": "scripts/download_and_filter.py",
+      "source_location": "L1",
+      "id": "scripts_download_and_filter_py",
+      "community": 0,
+      "norm_label": "download_and_filter.py"
+    },
+    {
+      "label": "count_joins()",
+      "file_type": "code",
+      "source_file": "scripts/download_and_filter.py",
+      "source_location": "L24",
+      "id": "scripts_download_and_filter_count_joins",
+      "community": 0,
+      "norm_label": "count_joins()"
+    },
+    {
+      "label": "count_subqueries()",
+      "file_type": "code",
+      "source_file": "scripts/download_and_filter.py",
+      "source_location": "L27",
+      "id": "scripts_download_and_filter_count_subqueries",
+      "community": 0,
+      "norm_label": "count_subqueries()"
+    },
+    {
+      "label": "has_aggregation()",
+      "file_type": "code",
+      "source_file": "scripts/download_and_filter.py",
+      "source_location": "L30",
+      "id": "scripts_download_and_filter_has_aggregation",
+      "community": 0,
+      "norm_label": "has_aggregation()"
+    },
+    {
+      "label": "has_nested_conditions()",
+      "file_type": "code",
+      "source_file": "scripts/download_and_filter.py",
+      "source_location": "L34",
+      "id": "scripts_download_and_filter_has_nested_conditions",
+      "community": 0,
+      "norm_label": "has_nested_conditions()"
+    },
+    {
+      "label": "classify_complexity()",
+      "file_type": "code",
+      "source_file": "scripts/download_and_filter.py",
+      "source_location": "L37",
+      "id": "scripts_download_and_filter_classify_complexity",
+      "community": 0,
+      "norm_label": "classify_complexity()"
+    },
+    {
+      "label": "is_valid_sql()",
+      "file_type": "code",
+      "source_file": "scripts/download_and_filter.py",
+      "source_location": "L54",
+      "id": "scripts_download_and_filter_is_valid_sql",
+      "community": 0,
+      "norm_label": "is_valid_sql()"
+    },
+    {
+      "label": "process_spider()",
+      "file_type": "code",
+      "source_file": "scripts/download_and_filter.py",
+      "source_location": "L65",
+      "id": "scripts_download_and_filter_process_spider",
+      "community": 0,
+      "norm_label": "process_spider()"
+    },
+    {
+      "label": "process_bird()",
+      "file_type": "code",
+      "source_file": "scripts/download_and_filter.py",
+      "source_location": "L118",
+      "id": "scripts_download_and_filter_process_bird",
+      "community": 0,
+      "norm_label": "process_bird()"
+    },
+    {
+      "label": "merge_and_report()",
+      "file_type": "code",
+      "source_file": "scripts/download_and_filter.py",
+      "source_location": "L176",
+      "id": "scripts_download_and_filter_merge_and_report",
+      "community": 0,
+      "norm_label": "merge_and_report()"
+    },
+    {
+      "label": "Day 1 Script: Download Spider + BIRD, filter to medium/hard complexity. Output:",
+      "file_type": "rationale",
+      "source_file": "scripts/download_and_filter.py",
+      "source_location": "L1",
+      "id": "scripts_download_and_filter_rationale_1",
+      "community": 0,
+      "norm_label": "day 1 script: download spider + bird, filter to medium/hard complexity. output:"
+    },
+    {
+      "label": "easy   \u2014 single table, no joins, no subqueries     medium \u2014 1-2 joins OR aggreg",
+      "file_type": "rationale",
+      "source_file": "scripts/download_and_filter.py",
+      "source_location": "L38",
+      "id": "scripts_download_and_filter_rationale_38",
+      "community": 0,
+      "norm_label": "easy   \u2014 single table, no joins, no subqueries     medium \u2014 1-2 joins or aggreg"
+    },
+    {
+      "label": "Check SQL parses without error using sqlparse.",
+      "file_type": "rationale",
+      "source_file": "scripts/download_and_filter.py",
+      "source_location": "L55",
+      "id": "scripts_download_and_filter_rationale_55",
+      "community": 0,
+      "norm_label": "check sql parses without error using sqlparse."
+    },
+    {
+      "label": "generate_schemas.py",
+      "file_type": "code",
+      "source_file": "scripts/generate_schemas.py",
+      "source_location": "L1",
+      "id": "scripts_generate_schemas_py",
+      "community": 5,
+      "norm_label": "generate_schemas.py"
+    },
+    {
+      "label": "schema_to_create_sql()",
+      "file_type": "code",
+      "source_file": "scripts/generate_schemas.py",
+      "source_location": "L400",
+      "id": "scripts_generate_schemas_schema_to_create_sql",
+      "community": 5,
+      "norm_label": "schema_to_create_sql()"
+    },
+    {
+      "label": "save_schemas()",
+      "file_type": "code",
+      "source_file": "scripts/generate_schemas.py",
+      "source_location": "L413",
+      "id": "scripts_generate_schemas_save_schemas",
+      "community": 5,
+      "norm_label": "save_schemas()"
+    },
+    {
+      "label": "Day 1 Script: Generate 10 synthetic schemas (5 e-commerce, 5 fintech). These be",
+      "file_type": "rationale",
+      "source_file": "scripts/generate_schemas.py",
+      "source_location": "L1",
+      "id": "scripts_generate_schemas_rationale_1",
+      "community": 5,
+      "norm_label": "day 1 script: generate 10 synthetic schemas (5 e-commerce, 5 fintech). these be"
+    },
+    {
+      "label": "Generate CREATE TABLE statements for a schema (used in prompts).",
+      "file_type": "rationale",
+      "source_file": "scripts/generate_schemas.py",
+      "source_location": "L401",
+      "id": "scripts_generate_schemas_rationale_401",
+      "community": 5,
+      "norm_label": "generate create table statements for a schema (used in prompts)."
+    },
+    {
+      "label": "run_baseline_eval.py",
+      "file_type": "code",
+      "source_file": "scripts/run_baseline_eval.py",
+      "source_location": "L1",
+      "id": "scripts_run_baseline_eval_py",
+      "community": 1,
+      "norm_label": "run_baseline_eval.py"
+    },
+    {
+      "label": "load_schemas()",
+      "file_type": "code",
+      "source_file": "scripts/run_baseline_eval.py",
+      "source_location": "L70",
+      "id": "scripts_run_baseline_eval_load_schemas",
+      "community": 1,
+      "norm_label": "load_schemas()"
+    },
+    {
+      "label": "load_eval_set()",
+      "file_type": "code",
+      "source_file": "scripts/run_baseline_eval.py",
+      "source_location": "L83",
+      "id": "scripts_run_baseline_eval_load_eval_set",
+      "community": 1,
+      "norm_label": "load_eval_set()"
+    },
+    {
+      "label": "_infer_value()",
+      "file_type": "code",
+      "source_file": "scripts/run_baseline_eval.py",
+      "source_location": "L117",
+      "id": "scripts_run_baseline_eval_infer_value",
+      "community": 2,
+      "norm_label": "_infer_value()"
+    },
+    {
+      "label": "build_sandbox()",
+      "file_type": "code",
+      "source_file": "scripts/run_baseline_eval.py",
+      "source_location": "L168",
+      "id": "scripts_run_baseline_eval_build_sandbox",
+      "community": 2,
+      "norm_label": "build_sandbox()"
+    },
+    {
+      "label": "execute_sql()",
+      "file_type": "code",
+      "source_file": "scripts/run_baseline_eval.py",
+      "source_location": "L205",
+      "id": "scripts_run_baseline_eval_execute_sql",
+      "community": 2,
+      "norm_label": "execute_sql()"
+    },
+    {
+      "label": "results_match()",
+      "file_type": "code",
+      "source_file": "scripts/run_baseline_eval.py",
+      "source_location": "L222",
+      "id": "scripts_run_baseline_eval_results_match",
+      "community": 2,
+      "norm_label": "results_match()"
+    },
+    {
+      "label": "call_gpt4o()",
+      "file_type": "code",
+      "source_file": "scripts/run_baseline_eval.py",
+      "source_location": "L254",
+      "id": "scripts_run_baseline_eval_call_gpt4o",
+      "community": 3,
+      "norm_label": "call_gpt4o()"
+    },
+    {
+      "label": "call_claude()",
+      "file_type": "code",
+      "source_file": "scripts/run_baseline_eval.py",
+      "source_location": "L275",
+      "id": "scripts_run_baseline_eval_call_claude",
+      "community": 3,
+      "norm_label": "call_claude()"
+    },
+    {
+      "label": "call_model()",
+      "file_type": "code",
+      "source_file": "scripts/run_baseline_eval.py",
+      "source_location": "L292",
+      "id": "scripts_run_baseline_eval_call_model",
+      "community": 3,
+      "norm_label": "call_model()"
+    },
+    {
+      "label": "run_eval()",
+      "file_type": "code",
+      "source_file": "scripts/run_baseline_eval.py",
+      "source_location": "L306",
+      "id": "scripts_run_baseline_eval_run_eval",
+      "community": 2,
+      "norm_label": "run_eval()"
+    },
+    {
+      "label": "compute_summary()",
+      "file_type": "code",
+      "source_file": "scripts/run_baseline_eval.py",
+      "source_location": "L372",
+      "id": "scripts_run_baseline_eval_compute_summary",
+      "community": 1,
+      "norm_label": "compute_summary()"
+    },
+    {
+      "label": "print_comparison_table()",
+      "file_type": "code",
+      "source_file": "scripts/run_baseline_eval.py",
+      "source_location": "L404",
+      "id": "scripts_run_baseline_eval_print_comparison_table",
+      "community": 1,
+      "norm_label": "print_comparison_table()"
+    },
+    {
+      "label": "main()",
+      "file_type": "code",
+      "source_file": "scripts/run_baseline_eval.py",
+      "source_location": "L428",
+      "id": "scripts_run_baseline_eval_main",
+      "community": 1,
+      "norm_label": "main()"
+    },
+    {
+      "label": "Day 2, Part 2 \u2014 Baseline eval runner.  WHY THIS FILE EXISTS:   This runs GPT-",
+      "file_type": "rationale",
+      "source_file": "scripts/run_baseline_eval.py",
+      "source_location": "L1",
+      "id": "scripts_run_baseline_eval_rationale_1",
+      "community": 1,
+      "norm_label": "day 2, part 2 \u2014 baseline eval runner.  why this file exists:   this runs gpt-"
+    },
+    {
+      "label": "Load all schema JSONs into a dict keyed by schema name.",
+      "file_type": "rationale",
+      "source_file": "scripts/run_baseline_eval.py",
+      "source_location": "L71",
+      "id": "scripts_run_baseline_eval_rationale_71",
+      "community": 1,
+      "norm_label": "load all schema jsons into a dict keyed by schema name."
+    },
+    {
+      "label": "Load golden eval set from JSONL.",
+      "file_type": "rationale",
+      "source_file": "scripts/run_baseline_eval.py",
+      "source_location": "L84",
+      "id": "scripts_run_baseline_eval_rationale_84",
+      "community": 1,
+      "norm_label": "load golden eval set from jsonl."
+    },
+    {
+      "label": "Given a column definition like 'user_id INT PK' or 'amount DECIMAL(10,2)',",
+      "file_type": "rationale",
+      "source_file": "scripts/run_baseline_eval.py",
+      "source_location": "L118",
+      "id": "scripts_run_baseline_eval_rationale_118",
+      "community": 2,
+      "norm_label": "given a column definition like 'user_id int pk' or 'amount decimal(10,2)',"
+    },
+    {
+      "label": "Create an in-memory DuckDB, create tables from schema, insert 5 rows each.",
+      "file_type": "rationale",
+      "source_file": "scripts/run_baseline_eval.py",
+      "source_location": "L169",
+      "id": "scripts_run_baseline_eval_rationale_169",
+      "community": 2,
+      "norm_label": "create an in-memory duckdb, create tables from schema, insert 5 rows each."
+    },
+    {
+      "label": "Execute SQL, return (success, result_rows, error_message).      WHY TUPLE RETU",
+      "file_type": "rationale",
+      "source_file": "scripts/run_baseline_eval.py",
+      "source_location": "L206",
+      "id": "scripts_run_baseline_eval_rationale_206",
+      "community": 2,
+      "norm_label": "execute sql, return (success, result_rows, error_message).      why tuple retu"
+    },
+    {
+      "label": "Compare two result sets, order-insensitively.      WHY ORDER-INSENSITIVE: The",
+      "file_type": "rationale",
+      "source_file": "scripts/run_baseline_eval.py",
+      "source_location": "L223",
+      "id": "scripts_run_baseline_eval_rationale_223",
+      "community": 2,
+      "norm_label": "compare two result sets, order-insensitively.      why order-insensitive: the"
+    },
+    {
+      "label": "Call GPT-4o and return (sql_output, latency_seconds).",
+      "file_type": "rationale",
+      "source_file": "scripts/run_baseline_eval.py",
+      "source_location": "L255",
+      "id": "scripts_run_baseline_eval_rationale_255",
+      "community": 3,
+      "norm_label": "call gpt-4o and return (sql_output, latency_seconds)."
+    },
+    {
+      "label": "Call Claude Sonnet and return (sql_output, latency_seconds).",
+      "file_type": "rationale",
+      "source_file": "scripts/run_baseline_eval.py",
+      "source_location": "L276",
+      "id": "scripts_run_baseline_eval_rationale_276",
+      "community": 3,
+      "norm_label": "call claude sonnet and return (sql_output, latency_seconds)."
+    },
+    {
+      "label": "Dispatch to the right model function.",
+      "file_type": "rationale",
+      "source_file": "scripts/run_baseline_eval.py",
+      "source_location": "L293",
+      "id": "scripts_run_baseline_eval_rationale_293",
+      "community": 3,
+      "norm_label": "dispatch to the right model function."
+    },
+    {
+      "label": "Run all eval examples through the model.      Returns list of result dicts, on",
+      "file_type": "rationale",
+      "source_file": "scripts/run_baseline_eval.py",
+      "source_location": "L307",
+      "id": "scripts_run_baseline_eval_rationale_307",
+      "community": 2,
+      "norm_label": "run all eval examples through the model.      returns list of result dicts, on"
+    },
+    {
+      "label": "Compute the key metrics for the comparison table.      Metrics explained:",
+      "file_type": "rationale",
+      "source_file": "scripts/run_baseline_eval.py",
+      "source_location": "L373",
+      "id": "scripts_run_baseline_eval_rationale_373",
+      "community": 1,
+      "norm_label": "compute the key metrics for the comparison table.      metrics explained:"
+    },
+    {
+      "label": "Print the table that goes in your README.     This is the document interviewers",
+      "file_type": "rationale",
+      "source_file": "scripts/run_baseline_eval.py",
+      "source_location": "L405",
+      "id": "scripts_run_baseline_eval_rationale_405",
+      "community": 1,
+      "norm_label": "print the table that goes in your readme.     this is the document interviewers"
+    },
+    {
+      "label": "# WHY: We want a fair comparison. The fine-tune is trained with this exact",
+      "file_type": "rationale",
+      "source_file": "scripts/run_baseline_eval.py",
+      "source_location": "L57",
+      "id": "scripts_run_baseline_eval_rationale_57",
+      "community": 1,
+      "norm_label": "# why: we want a fair comparison. the fine-tune is trained with this exact"
+    },
+    {
+      "label": "prompt_template.py",
+      "file_type": "code",
+      "source_file": "src/data/prompt_template.py",
+      "source_location": "L1",
+      "id": "src_data_prompt_template_py",
+      "community": 4,
+      "norm_label": "prompt_template.py"
+    },
+    {
+      "label": "format_prompt()",
+      "file_type": "code",
+      "source_file": "src/data/prompt_template.py",
+      "source_location": "L16",
+      "id": "data_prompt_template_format_prompt",
+      "community": 4,
+      "norm_label": "format_prompt()"
+    },
+    {
+      "label": "format_training_example()",
+      "file_type": "code",
+      "source_file": "src/data/prompt_template.py",
+      "source_location": "L34",
+      "id": "data_prompt_template_format_training_example",
+      "community": 4,
+      "norm_label": "format_training_example()"
+    },
+    {
+      "label": "Prompt formatting utilities. Single source of truth \u2014 used by training, inferen",
+      "file_type": "rationale",
+      "source_file": "src/data/prompt_template.py",
+      "source_location": "L1",
+      "id": "data_prompt_template_rationale_1",
+      "community": 4,
+      "norm_label": "prompt formatting utilities. single source of truth \u2014 used by training, inferen"
+    },
+    {
+      "label": "Returns messages list in Qwen2.5 chat format.     Used identically during train",
+      "file_type": "rationale",
+      "source_file": "src/data/prompt_template.py",
+      "source_location": "L17",
+      "id": "data_prompt_template_rationale_17",
+      "community": 4,
+      "norm_label": "returns messages list in qwen2.5 chat format.     used identically during train"
+    },
+    {
+      "label": "Full training example with assistant turn included.     Output is a dict with '",
+      "file_type": "rationale",
+      "source_file": "src/data/prompt_template.py",
+      "source_location": "L35",
+      "id": "data_prompt_template_rationale_35",
+      "community": 4,
+      "norm_label": "full training example with assistant turn included.     output is a dict with '"
+    }
+  ],
+  "links": [
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "main.py",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "main_py",
+      "target": "text_to_sql_main_main",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/build_eval_set.py",
+      "source_location": "L867",
+      "weight": 1.0,
+      "source": "scripts_build_eval_set_py",
+      "target": "scripts_build_eval_set_build_eval_set",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/build_eval_set.py",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "scripts_build_eval_set_rationale_1",
+      "target": "scripts_build_eval_set_py",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/download_and_filter.py",
+      "source_location": "L24",
+      "weight": 1.0,
+      "source": "scripts_download_and_filter_py",
+      "target": "scripts_download_and_filter_count_joins",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/download_and_filter.py",
+      "source_location": "L27",
+      "weight": 1.0,
+      "source": "scripts_download_and_filter_py",
+      "target": "scripts_download_and_filter_count_subqueries",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/download_and_filter.py",
+      "source_location": "L30",
+      "weight": 1.0,
+      "source": "scripts_download_and_filter_py",
+      "target": "scripts_download_and_filter_has_aggregation",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/download_and_filter.py",
+      "source_location": "L34",
+      "weight": 1.0,
+      "source": "scripts_download_and_filter_py",
+      "target": "scripts_download_and_filter_has_nested_conditions",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/download_and_filter.py",
+      "source_location": "L37",
+      "weight": 1.0,
+      "source": "scripts_download_and_filter_py",
+      "target": "scripts_download_and_filter_classify_complexity",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/download_and_filter.py",
+      "source_location": "L54",
+      "weight": 1.0,
+      "source": "scripts_download_and_filter_py",
+      "target": "scripts_download_and_filter_is_valid_sql",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/download_and_filter.py",
+      "source_location": "L65",
+      "weight": 1.0,
+      "source": "scripts_download_and_filter_py",
+      "target": "scripts_download_and_filter_process_spider",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/download_and_filter.py",
+      "source_location": "L118",
+      "weight": 1.0,
+      "source": "scripts_download_and_filter_py",
+      "target": "scripts_download_and_filter_process_bird",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/download_and_filter.py",
+      "source_location": "L176",
+      "weight": 1.0,
+      "source": "scripts_download_and_filter_py",
+      "target": "scripts_download_and_filter_merge_and_report",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/download_and_filter.py",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "scripts_download_and_filter_rationale_1",
+      "target": "scripts_download_and_filter_py",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/download_and_filter.py",
+      "source_location": "L43",
+      "weight": 1.0,
+      "source": "scripts_download_and_filter_classify_complexity",
+      "target": "scripts_download_and_filter_count_joins",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/download_and_filter.py",
+      "source_location": "L98",
+      "weight": 1.0,
+      "source": "scripts_download_and_filter_process_spider",
+      "target": "scripts_download_and_filter_count_joins",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/download_and_filter.py",
+      "source_location": "L160",
+      "weight": 1.0,
+      "source": "scripts_download_and_filter_process_bird",
+      "target": "scripts_download_and_filter_count_joins",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/download_and_filter.py",
+      "source_location": "L44",
+      "weight": 1.0,
+      "source": "scripts_download_and_filter_classify_complexity",
+      "target": "scripts_download_and_filter_count_subqueries",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/download_and_filter.py",
+      "source_location": "L99",
+      "weight": 1.0,
+      "source": "scripts_download_and_filter_process_spider",
+      "target": "scripts_download_and_filter_count_subqueries",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/download_and_filter.py",
+      "source_location": "L161",
+      "weight": 1.0,
+      "source": "scripts_download_and_filter_process_bird",
+      "target": "scripts_download_and_filter_count_subqueries",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/download_and_filter.py",
+      "source_location": "L45",
+      "weight": 1.0,
+      "source": "scripts_download_and_filter_classify_complexity",
+      "target": "scripts_download_and_filter_has_aggregation",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/download_and_filter.py",
+      "source_location": "L46",
+      "weight": 1.0,
+      "source": "scripts_download_and_filter_classify_complexity",
+      "target": "scripts_download_and_filter_has_nested_conditions",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/download_and_filter.py",
+      "source_location": "L86",
+      "weight": 1.0,
+      "source": "scripts_download_and_filter_process_spider",
+      "target": "scripts_download_and_filter_classify_complexity",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/download_and_filter.py",
+      "source_location": "L150",
+      "weight": 1.0,
+      "source": "scripts_download_and_filter_process_bird",
+      "target": "scripts_download_and_filter_classify_complexity",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/download_and_filter.py",
+      "source_location": "L38",
+      "weight": 1.0,
+      "source": "scripts_download_and_filter_rationale_38",
+      "target": "scripts_download_and_filter_classify_complexity",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/download_and_filter.py",
+      "source_location": "L82",
+      "weight": 1.0,
+      "source": "scripts_download_and_filter_process_spider",
+      "target": "scripts_download_and_filter_is_valid_sql",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/download_and_filter.py",
+      "source_location": "L141",
+      "weight": 1.0,
+      "source": "scripts_download_and_filter_process_bird",
+      "target": "scripts_download_and_filter_is_valid_sql",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/download_and_filter.py",
+      "source_location": "L55",
+      "weight": 1.0,
+      "source": "scripts_download_and_filter_rationale_55",
+      "target": "scripts_download_and_filter_is_valid_sql",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/generate_schemas.py",
+      "source_location": "L400",
+      "weight": 1.0,
+      "source": "scripts_generate_schemas_py",
+      "target": "scripts_generate_schemas_schema_to_create_sql",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/generate_schemas.py",
+      "source_location": "L413",
+      "weight": 1.0,
+      "source": "scripts_generate_schemas_py",
+      "target": "scripts_generate_schemas_save_schemas",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/generate_schemas.py",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "scripts_generate_schemas_rationale_1",
+      "target": "scripts_generate_schemas_py",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/generate_schemas.py",
+      "source_location": "L417",
+      "weight": 1.0,
+      "source": "scripts_generate_schemas_save_schemas",
+      "target": "scripts_generate_schemas_schema_to_create_sql",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/generate_schemas.py",
+      "source_location": "L401",
+      "weight": 1.0,
+      "source": "scripts_generate_schemas_rationale_401",
+      "target": "scripts_generate_schemas_schema_to_create_sql",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/run_baseline_eval.py",
+      "source_location": "L70",
+      "weight": 1.0,
+      "source": "scripts_run_baseline_eval_py",
+      "target": "scripts_run_baseline_eval_load_schemas",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/run_baseline_eval.py",
+      "source_location": "L83",
+      "weight": 1.0,
+      "source": "scripts_run_baseline_eval_py",
+      "target": "scripts_run_baseline_eval_load_eval_set",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/run_baseline_eval.py",
+      "source_location": "L117",
+      "weight": 1.0,
+      "source": "scripts_run_baseline_eval_py",
+      "target": "scripts_run_baseline_eval_infer_value",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/run_baseline_eval.py",
+      "source_location": "L168",
+      "weight": 1.0,
+      "source": "scripts_run_baseline_eval_py",
+      "target": "scripts_run_baseline_eval_build_sandbox",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/run_baseline_eval.py",
+      "source_location": "L205",
+      "weight": 1.0,
+      "source": "scripts_run_baseline_eval_py",
+      "target": "scripts_run_baseline_eval_execute_sql",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/run_baseline_eval.py",
+      "source_location": "L222",
+      "weight": 1.0,
+      "source": "scripts_run_baseline_eval_py",
+      "target": "scripts_run_baseline_eval_results_match",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/run_baseline_eval.py",
+      "source_location": "L254",
+      "weight": 1.0,
+      "source": "scripts_run_baseline_eval_py",
+      "target": "scripts_run_baseline_eval_call_gpt4o",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/run_baseline_eval.py",
+      "source_location": "L275",
+      "weight": 1.0,
+      "source": "scripts_run_baseline_eval_py",
+      "target": "scripts_run_baseline_eval_call_claude",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/run_baseline_eval.py",
+      "source_location": "L292",
+      "weight": 1.0,
+      "source": "scripts_run_baseline_eval_py",
+      "target": "scripts_run_baseline_eval_call_model",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/run_baseline_eval.py",
+      "source_location": "L306",
+      "weight": 1.0,
+      "source": "scripts_run_baseline_eval_py",
+      "target": "scripts_run_baseline_eval_run_eval",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/run_baseline_eval.py",
+      "source_location": "L372",
+      "weight": 1.0,
+      "source": "scripts_run_baseline_eval_py",
+      "target": "scripts_run_baseline_eval_compute_summary",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/run_baseline_eval.py",
+      "source_location": "L404",
+      "weight": 1.0,
+      "source": "scripts_run_baseline_eval_py",
+      "target": "scripts_run_baseline_eval_print_comparison_table",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/run_baseline_eval.py",
+      "source_location": "L428",
+      "weight": 1.0,
+      "source": "scripts_run_baseline_eval_py",
+      "target": "scripts_run_baseline_eval_main",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/run_baseline_eval.py",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "scripts_run_baseline_eval_rationale_1",
+      "target": "scripts_run_baseline_eval_py",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/run_baseline_eval.py",
+      "source_location": "L57",
+      "weight": 1.0,
+      "source": "scripts_run_baseline_eval_rationale_57",
+      "target": "scripts_run_baseline_eval_py",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/run_baseline_eval.py",
+      "source_location": "L439",
+      "weight": 1.0,
+      "source": "scripts_run_baseline_eval_main",
+      "target": "scripts_run_baseline_eval_load_schemas",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/run_baseline_eval.py",
+      "source_location": "L71",
+      "weight": 1.0,
+      "source": "scripts_run_baseline_eval_rationale_71",
+      "target": "scripts_run_baseline_eval_load_schemas",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/run_baseline_eval.py",
+      "source_location": "L440",
+      "weight": 1.0,
+      "source": "scripts_run_baseline_eval_main",
+      "target": "scripts_run_baseline_eval_load_eval_set",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/run_baseline_eval.py",
+      "source_location": "L84",
+      "weight": 1.0,
+      "source": "scripts_run_baseline_eval_rationale_84",
+      "target": "scripts_run_baseline_eval_load_eval_set",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/run_baseline_eval.py",
+      "source_location": "L195",
+      "weight": 1.0,
+      "source": "scripts_run_baseline_eval_build_sandbox",
+      "target": "scripts_run_baseline_eval_infer_value",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/run_baseline_eval.py",
+      "source_location": "L118",
+      "weight": 1.0,
+      "source": "scripts_run_baseline_eval_rationale_118",
+      "target": "scripts_run_baseline_eval_infer_value",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/run_baseline_eval.py",
+      "source_location": "L339",
+      "weight": 1.0,
+      "source": "scripts_run_baseline_eval_run_eval",
+      "target": "scripts_run_baseline_eval_build_sandbox",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/run_baseline_eval.py",
+      "source_location": "L169",
+      "weight": 1.0,
+      "source": "scripts_run_baseline_eval_rationale_169",
+      "target": "scripts_run_baseline_eval_build_sandbox",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/run_baseline_eval.py",
+      "source_location": "L341",
+      "weight": 1.0,
+      "source": "scripts_run_baseline_eval_run_eval",
+      "target": "scripts_run_baseline_eval_execute_sql",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/run_baseline_eval.py",
+      "source_location": "L206",
+      "weight": 1.0,
+      "source": "scripts_run_baseline_eval_rationale_206",
+      "target": "scripts_run_baseline_eval_execute_sql",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/run_baseline_eval.py",
+      "source_location": "L348",
+      "weight": 1.0,
+      "source": "scripts_run_baseline_eval_run_eval",
+      "target": "scripts_run_baseline_eval_results_match",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/run_baseline_eval.py",
+      "source_location": "L223",
+      "weight": 1.0,
+      "source": "scripts_run_baseline_eval_rationale_223",
+      "target": "scripts_run_baseline_eval_results_match",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/run_baseline_eval.py",
+      "source_location": "L295",
+      "weight": 1.0,
+      "source": "scripts_run_baseline_eval_call_model",
+      "target": "scripts_run_baseline_eval_call_gpt4o",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/run_baseline_eval.py",
+      "source_location": "L255",
+      "weight": 1.0,
+      "source": "scripts_run_baseline_eval_rationale_255",
+      "target": "scripts_run_baseline_eval_call_gpt4o",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/run_baseline_eval.py",
+      "source_location": "L297",
+      "weight": 1.0,
+      "source": "scripts_run_baseline_eval_call_model",
+      "target": "scripts_run_baseline_eval_call_claude",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/run_baseline_eval.py",
+      "source_location": "L276",
+      "weight": 1.0,
+      "source": "scripts_run_baseline_eval_rationale_276",
+      "target": "scripts_run_baseline_eval_call_claude",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/run_baseline_eval.py",
+      "source_location": "L330",
+      "weight": 1.0,
+      "source": "scripts_run_baseline_eval_run_eval",
+      "target": "scripts_run_baseline_eval_call_model",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/run_baseline_eval.py",
+      "source_location": "L293",
+      "weight": 1.0,
+      "source": "scripts_run_baseline_eval_rationale_293",
+      "target": "scripts_run_baseline_eval_call_model",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/run_baseline_eval.py",
+      "source_location": "L456",
+      "weight": 1.0,
+      "source": "scripts_run_baseline_eval_main",
+      "target": "scripts_run_baseline_eval_run_eval",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/run_baseline_eval.py",
+      "source_location": "L307",
+      "weight": 1.0,
+      "source": "scripts_run_baseline_eval_rationale_307",
+      "target": "scripts_run_baseline_eval_run_eval",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/run_baseline_eval.py",
+      "source_location": "L465",
+      "weight": 1.0,
+      "source": "scripts_run_baseline_eval_main",
+      "target": "scripts_run_baseline_eval_compute_summary",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/run_baseline_eval.py",
+      "source_location": "L373",
+      "weight": 1.0,
+      "source": "scripts_run_baseline_eval_rationale_373",
+      "target": "scripts_run_baseline_eval_compute_summary",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/run_baseline_eval.py",
+      "source_location": "L473",
+      "weight": 1.0,
+      "source": "scripts_run_baseline_eval_main",
+      "target": "scripts_run_baseline_eval_print_comparison_table",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/run_baseline_eval.py",
+      "source_location": "L405",
+      "weight": 1.0,
+      "source": "scripts_run_baseline_eval_rationale_405",
+      "target": "scripts_run_baseline_eval_print_comparison_table",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/data/prompt_template.py",
+      "source_location": "L16",
+      "weight": 1.0,
+      "source": "src_data_prompt_template_py",
+      "target": "data_prompt_template_format_prompt",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/data/prompt_template.py",
+      "source_location": "L34",
+      "weight": 1.0,
+      "source": "src_data_prompt_template_py",
+      "target": "data_prompt_template_format_training_example",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "src/data/prompt_template.py",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "data_prompt_template_rationale_1",
+      "target": "src_data_prompt_template_py",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/data/prompt_template.py",
+      "source_location": "L39",
+      "weight": 1.0,
+      "source": "data_prompt_template_format_training_example",
+      "target": "data_prompt_template_format_prompt",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "src/data/prompt_template.py",
+      "source_location": "L17",
+      "weight": 1.0,
+      "source": "data_prompt_template_rationale_17",
+      "target": "data_prompt_template_format_prompt",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "src/data/prompt_template.py",
+      "source_location": "L35",
+      "weight": 1.0,
+      "source": "data_prompt_template_rationale_35",
+      "target": "data_prompt_template_format_training_example",
+      "confidence_score": 1.0
+    }
+  ],
+  "hyperedges": [],
+  "built_at_commit": "1b4d3d1f36d47763b1fc24aab34da36ba129140c"
+}

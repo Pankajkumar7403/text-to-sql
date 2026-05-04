@@ -1,0 +1,42 @@
+{
+  "C:\\Users\\admin\\Documents\\DS Projects\\text-to-sql\\main.py": {
+    "mtime": 1777705487.945099,
+    "hash": "f9655195ff03c1b492aef36828ae6e5b"
+  },
+  "C:\\Users\\admin\\Documents\\DS Projects\\text-to-sql\\scripts\\build_eval_set.py": {
+    "mtime": 1777874656.4670918,
+    "hash": "88903cbf38156ed3c272e15af52c2e9f"
+  },
+  "C:\\Users\\admin\\Documents\\DS Projects\\text-to-sql\\scripts\\download_and_filter.py": {
+    "mtime": 1777706894.6603265,
+    "hash": "d0a215db9f34ca57d1c1ecd004f2d61c"
+  },
+  "C:\\Users\\admin\\Documents\\DS Projects\\text-to-sql\\scripts\\generate_schemas.py": {
+    "mtime": 1777706906.7497456,
+    "hash": "c65e168652059c9154f7055e0c8e34d9"
+  },
+  "C:\\Users\\admin\\Documents\\DS Projects\\text-to-sql\\scripts\\run_baseline_eval.py": {
+    "mtime": 1777883094.065124,
+    "hash": "799efceef83bfd48fcc59d78a636ce82"
+  },
+  "C:\\Users\\admin\\Documents\\DS Projects\\text-to-sql\\src\\data\\prompt_template.py": {
+    "mtime": 1777711205.3498397,
+    "hash": "4f5dae9848df96e9978bd57bdbd70aea"
+  },
+  "C:\\Users\\admin\\Documents\\DS Projects\\text-to-sql\\CLAUDE_CODE_PROMPT.md": {
+    "mtime": 1777882458.7643087,
+    "hash": "1e3220c1ea08f65eda39921aa3288ce0"
+  },
+  "C:\\Users\\admin\\Documents\\DS Projects\\text-to-sql\\GEMINI.md": {
+    "mtime": 1777883642.4800498,
+    "hash": "2ed67c68f28bc1ef95ac24167431d7e8"
+  },
+  "C:\\Users\\admin\\Documents\\DS Projects\\text-to-sql\\README.md": {
+    "mtime": 1777705487.951977,
+    "hash": "d41d8cd98f00b204e9800998ecf8427e"
+  },
+  "C:\\Users\\admin\\Documents\\DS Projects\\text-to-sql\\requirements.txt": {
+    "mtime": 1777706569.9445772,
+    "hash": "0a48815707cf63b1b6ed0d82ca3600e1"
+  }
+}
