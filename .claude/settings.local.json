@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(Get-ChildItem \"C:\\\\Users\\\\admin\\\\Documents\\\\DS Projects\\\\text-to-sql\" | Where-Object { $_.Name -ne \".venv\" } | Format-Table Name, LastWriteTime -AutoSize)",
+      "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); print\\(json.dumps\\({'name':d['name'],'tables':list\\(d['tables'].keys\\(\\)\\),'create_sql':d['create_sql'][:500]}, indent=2\\)\\)\")",
+      "Bash(python3 -c \"import sys,json; [print\\(json.dumps\\(json.loads\\(l\\), indent=2\\)\\) for l in sys.stdin]\")",
+      "Bash(python3 -c ' *)"
+    ]
+  }
+}

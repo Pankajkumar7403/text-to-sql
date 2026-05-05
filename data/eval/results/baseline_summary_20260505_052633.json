@@ -1,0 +1,13 @@
+{
+  "model": "Qwen/Qwen2.5-7B-Instruct",
+  "total": 68,
+  "valid_sql_easy": 95.2,
+  "exec_accuracy_easy": 81.0,
+  "valid_sql_medium": 76.9,
+  "exec_accuracy_medium": 34.6,
+  "valid_sql_hard": 71.4,
+  "exec_accuracy_hard": 33.3,
+  "valid_sql_overall": 80.9,
+  "exec_accuracy_overall": 48.5,
+  "avg_latency_s": 11.23
+}
