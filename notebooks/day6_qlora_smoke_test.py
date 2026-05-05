@@ -1,9 +1,9 @@
 # =============================================================================
-# DAY 6 — QLoRA Smoke Test Training (PEFT + TRL SFTTrainer)
+— QLoRA Smoke Test Training (Unsloth + TRL SFTTrainer)
 # Run this on Kaggle with T4 GPU enabled.
 #
 # GOAL: Verify the full training pipeline runs without crashing.
-#   100 examples, 1 epoch, ~20-25 minutes on T4.
+#   100 examples, 1 epoch, ~10-15 minutes on T4.
 #   If Cell 9 (inference) generates valid SQL -> pipeline is confirmed.
 #   Day 8 does the real run: all 1,023 examples, 3 epochs, W&B tracking.
 #
@@ -13,37 +13,49 @@
 #   2. Re-attach the dataset to this notebook
 #   3. Enable GPU: Settings -> Accelerator -> GPU T4 x2
 #
-# WHY PEFT DIRECTLY (not Unsloth):
-#   Unsloth patches transformers' training loop internals at runtime.
-#   On Kaggle, its compiled cache conflicts with the pre-installed
-#   transformers version -> 'int has no attr mean' crash.
-#   Vanilla PEFT + TRL is version-stable and works reliably.
-#   Trade-off: ~20-25 min instead of ~10-15 min for 100 examples.
-#   Still well within Kaggle's 12-hour session limit.
+# WHY GIT INSTALL FOR UNSLOTH:
+#   The PyPI release has a bug where it calls .mean() on num_items_in_batch
+#   which is now passed as int by newer transformers -> AttributeError.
+#   The git HEAD has this fixed. Installing from git gets the patched version.
 #
 # WHAT QLORA DOES:
-#   - Base model weights frozen and quantized to 4-bit (not updated)
+#   - Base model frozen and quantized to 4-bit (not updated)
 #   - LoRA adapters (rank 16) added to all linear projection layers
 #   - Only ~42M params out of 7.6B are trained
-#   - Adapter size on disk: ~64 MB
+#   - Unsloth: 2x faster training, 60% less VRAM than vanilla PEFT
 # =============================================================================
 
 
 # =============================================================================
 # CELL 1 — Install packages
-# Runtime: ~2-3 minutes
+# Runtime: ~3-4 minutes
+# Install Unsloth from git HEAD — has the fix for the 'int has no .mean()' crash
+# that affects the PyPI release on Kaggle's transformers version.
 # =============================================================================
 
 # %%
 import subprocess
 
+# Step 1: Stable PyPI unsloth — pulls a compatible unsloth_zoo version.
+#   Kaggle pre-installs unsloth_zoo as a system package; its version is pinned
+#   to match the PyPI unsloth release, not git HEAD. Installing from PyPI first
+#   ensures unsloth_zoo is at the right version.
+subprocess.run(["pip", "install", "--quiet", "unsloth"], check=True)
+
+# Step 2: Upgrade ONLY unsloth from git with --no-deps.
+#   Gets the bug-fix for 'int has no .mean()' without touching unsloth_zoo.
+#   --no-deps is critical: without it, pip would try to re-resolve unsloth_zoo
+#   from git and break the version match we just established.
+subprocess.run([
+    "pip", "install", "--quiet", "--upgrade", "--no-cache-dir", "--no-deps",
+    "git+https://github.com/unslothai/unsloth.git",
+], check=True)
+
+# Step 3: Training stack
 subprocess.run([
     "pip", "install", "--quiet",
-    "peft>=0.12.0",
-    "trl>=0.9.4",
-    "accelerate>=0.34.0",
-    "bitsandbytes>=0.43.0",
-    "datasets>=2.19.0",
+    "trl", "peft>=0.12.0", "accelerate>=0.34.0",
+    "bitsandbytes>=0.43.0", "datasets>=2.19.0",
 ], check=True)
 
 print("Packages installed.")
@@ -60,14 +72,8 @@ from pathlib import Path
 
 import torch
 from datasets import Dataset
-from peft import LoraConfig, TaskType, get_peft_model, prepare_model_for_kbit_training
-from transformers import (
-    AutoModelForCausalLM,
-    AutoTokenizer,
-    BitsAndBytesConfig,
-    TrainingArguments,
-)
-from trl import SFTTrainer
+from trl import SFTTrainer, SFTConfig   # SFTConfig required in TRL 0.12+
+from unsloth import FastLanguageModel
 
 # Kaggle paths
 DATA_DIR    = Path("/kaggle/input/text-to-sql-data")
@@ -76,7 +82,7 @@ OUTPUT_DIR  = Path("/kaggle/working")
 ADAPTER_DIR = OUTPUT_DIR / "qwen25_sql_smoke_adapter"
 
 MODEL_ID       = "Qwen/Qwen2.5-7B-Instruct"
-MAX_SEQ_LENGTH = 2048   # covers schemas + SQL for all complexity levels
+MAX_SEQ_LENGTH = 2048   # covers all schemas + SQL (~900-1400 tokens worst case)
 SMOKE_N        = 100    # smoke test: 100 examples, 1 epoch
 
 print(f"Train file exists: {TRAIN_FILE.exists()}")
@@ -88,34 +94,20 @@ if torch.cuda.is_available():
 
 
 # =============================================================================
-# CELL 3 — Load model in 4-bit
+# CELL 3 — Load model with Unsloth (4-bit)
 # Runtime: ~4-6 minutes (downloads ~15 GB)
-# Memory:  ~4.5 GB VRAM after load
+# Memory:  ~4.5 GB VRAM — leaves ~10 GB for activations + gradients
 # =============================================================================
 
 # %%
-bnb_config = BitsAndBytesConfig(
+print(f"Loading {MODEL_ID} with Unsloth 4-bit...")
+
+model, tokenizer = FastLanguageModel.from_pretrained(
+    model_name=MODEL_ID,
+    max_seq_length=MAX_SEQ_LENGTH,
+    dtype=None,        # auto-detect: fp16 on T4, bf16 on A100
     load_in_4bit=True,
-    bnb_4bit_quant_type="nf4",
-    bnb_4bit_compute_dtype=torch.float16,
-    bnb_4bit_use_double_quant=True,
 )
-
-print(f"Loading {MODEL_ID} in 4-bit...")
-tokenizer = AutoTokenizer.from_pretrained(MODEL_ID, trust_remote_code=True)
-tokenizer.pad_token = tokenizer.eos_token          # Qwen has no pad token by default
-tokenizer.padding_side = "right"                   # pad on right for training (causal LM)
-
-model = AutoModelForCausalLM.from_pretrained(
-    MODEL_ID,
-    quantization_config=bnb_config,
-    device_map="auto",
-    trust_remote_code=True,
-)
-
-# prepare_model_for_kbit_training: casts LayerNorm to fp32, enables gradient checkpointing
-# These two steps are required before applying LoRA to a quantized model
-model = prepare_model_for_kbit_training(model, use_gradient_checkpointing=True)
 
 vram_used = torch.cuda.memory_allocated() / 1e9
 print(f"Model loaded. VRAM used: {vram_used:.1f} GB")
@@ -126,21 +118,24 @@ print(f"Model loaded. VRAM used: {vram_used:.1f} GB")
 # =============================================================================
 
 # %%
-lora_config = LoraConfig(
-    r=16,                          # adapter rank
-    lora_alpha=16,                 # scaling factor (alpha=r -> no extra scaling)
-    target_modules=[               # all linear projections in attention + FFN
-        "q_proj", "k_proj", "v_proj", "o_proj",
-        "gate_proj", "up_proj", "down_proj",
+model = FastLanguageModel.get_peft_model(
+    model,
+    r=16,
+    lora_alpha=16,
+    target_modules=[
+        "q_proj", "k_proj", "v_proj", "o_proj",    # attention projections
+        "gate_proj", "up_proj", "down_proj",         # SwiGLU FFN
     ],
-    lora_dropout=0.05,
+    lora_dropout=0,                          # 0 is faster; works as well with QLoRA
     bias="none",
-    task_type=TaskType.CAUSAL_LM,
+    use_gradient_checkpointing="unsloth",    # Unsloth custom checkpointing: saves 30% VRAM
+    random_state=42,
 )
 
-model = get_peft_model(model, lora_config)
-model.print_trainable_parameters()
-# Expected: trainable params: ~42M || all params: ~7.6B || trainable: ~0.55%
+trainable = sum(p.numel() for p in model.parameters() if p.requires_grad)
+total     = sum(p.numel() for p in model.parameters())
+print(f"Trainable params: {trainable:,} / {total:,} ({trainable/total*100:.2f}%)")
+# Expected: ~42M / 7.6B = ~0.55%
 
 
 # =============================================================================
@@ -161,7 +156,7 @@ def load_jsonl(path: Path) -> list[dict]:
 def apply_chat_template(examples: dict) -> dict:
     """
     Convert messages list to a single string for SFTTrainer.
-    add_generation_prompt=False: training data already has the assistant answer.
+    add_generation_prompt=False: training data already has the assistant (SQL) answer.
     """
     texts = []
     for msgs in examples["messages"]:
@@ -177,7 +172,7 @@ def apply_chat_template(examples: dict) -> dict:
 all_examples = load_jsonl(TRAIN_FILE)
 print(f"Total training examples available: {len(all_examples)}")
 
-# Stratified sample: preserve easy/medium/hard ratio in the 100-example smoke set
+# Stratified sample: preserve easy/medium/hard ratio in the smoke set
 random.seed(42)
 by_complexity: dict[str, list] = {"easy": [], "medium": [], "hard": []}
 for ex in all_examples:
@@ -193,63 +188,59 @@ smoke_examples = smoke_examples[:SMOKE_N]
 
 complexity_counts = {c: sum(1 for e in smoke_examples if e["complexity"] == c)
                      for c in ["easy", "medium", "hard"]}
-print(f"Smoke set size: {len(smoke_examples)} | split: {complexity_counts}")
+print(f"Smoke set: {len(smoke_examples)} examples | {complexity_counts}")
 
 dataset = Dataset.from_list(smoke_examples)
 dataset = dataset.map(apply_chat_template, batched=True, remove_columns=dataset.column_names)
-print(f"Dataset ready. Sample text length: {len(dataset[0]['text'])} chars")
+print(f"Dataset ready. Sample length: {len(dataset[0]['text'])} chars")
 
 
 # =============================================================================
 # CELL 6 — Configure SFTTrainer
+# TRL 0.12+ requires SFTConfig instead of TrainingArguments.
+# dataset_text_field and max_seq_length now live in SFTConfig, not SFTTrainer.__init__
 # =============================================================================
 
 # %%
-# T4 does not support bfloat16 — use fp16
-use_fp16 = not torch.cuda.is_bf16_supported()
-use_bf16 = torch.cuda.is_bf16_supported()
-print(f"Using fp16={use_fp16}, bf16={use_bf16}")
-
-training_args = TrainingArguments(
+training_args = SFTConfig(
     output_dir=str(OUTPUT_DIR / "checkpoints"),
     num_train_epochs=1,
     per_device_train_batch_size=2,
     gradient_accumulation_steps=4,    # effective batch size = 8
-    warmup_ratio=0.1,
+    warmup_steps=5,
     learning_rate=2e-4,
-    fp16=use_fp16,
-    bf16=use_bf16,
+    fp16=not torch.cuda.is_bf16_supported(),   # T4 -> fp16
+    bf16=torch.cuda.is_bf16_supported(),        # A100 -> bf16
     logging_steps=5,
     save_strategy="epoch",
-    optim="paged_adamw_8bit",         # 8-bit paged Adam: same convergence, half the memory
+    optim="adamw_8bit",
     weight_decay=0.01,
     lr_scheduler_type="cosine",
     seed=42,
     report_to="none",                 # no W&B for smoke test; Day 8 adds it
-    gradient_checkpointing=True,      # trade compute for VRAM (required for T4)
-    gradient_checkpointing_kwargs={"use_reentrant": False},
+    # SFT-specific params (moved out of SFTTrainer.__init__ in TRL 0.12+)
+    dataset_text_field="text",
+    max_seq_length=MAX_SEQ_LENGTH,
+    dataset_num_proc=2,
 )
 
 trainer = SFTTrainer(
     model=model,
-    tokenizer=tokenizer,
+    processing_class=tokenizer,       # renamed from 'tokenizer' in TRL 0.12+
     train_dataset=dataset,
-    dataset_text_field="text",
-    max_seq_length=MAX_SEQ_LENGTH,
-    dataset_num_proc=2,
     args=training_args,
 )
 
 steps = len(dataset) // (training_args.per_device_train_batch_size *
                           training_args.gradient_accumulation_steps)
-print(f"Steps per epoch: {steps}")
-print(f"Estimated time: {steps * 10 / 60:.0f}-{steps * 15 / 60:.0f} minutes on T4")
+print(f"Steps per epoch:  {steps}")
+print(f"Estimated time:   {steps * 4 / 60:.0f}-{steps * 6 / 60:.0f} minutes on T4 (Unsloth)")
 
 
 # =============================================================================
 # CELL 7 — Train
-# Runtime: ~20-25 minutes for 100 examples on T4
-# Watch the loss drop from ~2.0 toward ~0.5 over the steps.
+# Runtime: ~10-15 minutes for 100 examples on T4 with Unsloth
+# Loss should drop from ~2.0 toward ~0.5 over the steps.
 # =============================================================================
 
 # %%
@@ -283,11 +274,11 @@ print(f"Size:  {total_mb:.1f} MB")
 
 # =============================================================================
 # CELL 9 — Quick inference check
-# Confirms the trained adapter generates SQL — does NOT measure accuracy.
+# Confirms the adapter generates SQL. Does NOT measure accuracy.
 # =============================================================================
 
 # %%
-model.eval()  # disable dropout for deterministic output
+FastLanguageModel.for_inference(model)   # re-enables Unsloth's inference kernels
 
 SYSTEM_PROMPT = """You are an expert SQL engineer. Given a database schema and a natural language question, write a correct and efficient SQL query.
 
@@ -321,7 +312,7 @@ def smoke_infer(schema_sql: str, question: str) -> str:
     return sql.replace("```sql", "").replace("```", "").strip()
 
 
-print("Smoke inference (2 examples from training set):\n")
+print("Smoke inference (2 examples):\n")
 for i, ex in enumerate(smoke_examples[:2], 1):
     user_content = ex["messages"][1]["content"]
     schema_part = user_content.split("\n\nQuestion:")[0].replace("Schema:\n", "")
@@ -333,8 +324,8 @@ for i, ex in enumerate(smoke_examples[:2], 1):
     print(f"  Reference: {ex['sql'][:120]}")
     print()
 
-print("PASS: if both Generated lines look like SQL (not garbage or repetition).")
-print("FAIL: if output is empty, garbled, or endlessly repeated text.")
+print("PASS: both Generated lines look like real SQL.")
+print("FAIL: output is empty, garbled, or repeating text.")
 print()
 print("Day 8: set SMOKE_N=1023, num_train_epochs=3, report_to='wandb' for full run.")
 
@@ -344,20 +335,14 @@ print("Day 8: set SMOKE_N=1023, num_train_epochs=3, report_to='wandb' for full r
 # =============================================================================
 #
 # Changes from smoke test -> full run:
-#   SMOKE_N              = 100  ->  (remove; use all_examples directly)
-#   num_train_epochs     = 1    ->  3
-#   per_device_batch     = 2    ->  2   (same — constrained by T4 VRAM)
-#   report_to            = "none" -> "wandb"
-#     (add WANDB_API_KEY to Kaggle Secrets: notebook Settings -> Secrets)
-#   save_strategy        = "epoch" -> "steps"; save_steps = 100
-#   logging_steps        = 5    ->  20
+#   SMOKE_N (in Cell 5)      = 100  ->  remove; use all_examples directly
+#   num_train_epochs         = 1    ->  3
+#   report_to                = "none" -> "wandb"
+#     (add WANDB_API_KEY to Kaggle Secrets: Settings -> Secrets)
+#   save_strategy            = "epoch" -> "steps"; save_steps = 100
+#   logging_steps            = 5    ->  20
 #
-# Expected full-run metrics on T4:
-#   Runtime:   90-120 minutes  (within 12-hour Kaggle session limit)
+# Expected full-run metrics on T4 with Unsloth:
+#   Runtime:    60-90 minutes  (within 12-hour Kaggle session limit)
 #   Final loss: 0.25-0.40
-#   Peak VRAM:  11-13 GB
-#
-# After training:
-#   Download adapter from Kaggle Output tab ->
-#   data/models/qwen25_sql_qlora/  in local project
-#   Day 13: push to HuggingFace Hub
+#   Peak VRAM:  8-11 GB
