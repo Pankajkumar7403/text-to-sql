@@ -100,6 +100,10 @@ model.load_adapter(str(ADAPTER_DIR))
 # Switch to inference mode: disables dropout, enables Unsloth inference kernels
 FastLanguageModel.for_inference(model)
 
+# Clear max_length from generation config — it conflicts with max_new_tokens and
+# causes a warning on every generate() call. max_new_tokens takes precedence anyway.
+model.generation_config.max_length = None
+
 vram = torch.cuda.memory_allocated() / 1e9
 print(f"Model + adapter loaded. VRAM: {vram:.1f} GB")
 

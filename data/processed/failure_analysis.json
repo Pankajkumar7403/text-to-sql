@@ -1,0 +1,53 @@
+{
+  "source_file": "finetuned_qwen25_7b_20260505_132721.jsonl",
+  "total": 68,
+  "correct": 35,
+  "failed": 33,
+  "invalid_sql": 5,
+  "pattern_failures": {
+    "aggregation": 27,
+    "order_limit": 31,
+    "multi_join": 10,
+    "having": 3,
+    "cte": 7,
+    "window_function": 7,
+    "rank_function": 4,
+    "correlated_sub": 10,
+    "distinct": 1
+  },
+  "pattern_fail_rates": {
+    "aggregation": 64.3,
+    "order_limit": 64.6,
+    "multi_join": 55.6,
+    "having": 42.9,
+    "cte": 53.8,
+    "window_function": 70.0,
+    "rank_function": 57.1,
+    "correlated_sub": 58.8,
+    "distinct": 50.0
+  },
+  "complexity_failures": {
+    "medium": 16,
+    "hard": 14,
+    "easy": 3
+  },
+  "schema_failures": {
+    "marketplace_v1": 8,
+    "neobank_v1": 6,
+    "lending_v1": 6,
+    "payments_v1": 3,
+    "investment_v1": 2,
+    "retail_analytics_v1": 1,
+    "subscription_ecom_v1": 3,
+    "logistics_v1": 1,
+    "saas_metrics_v1": 2,
+    "insurance_v1": 1
+  },
+  "top_patterns_to_target": [
+    "window_function",
+    "order_limit",
+    "aggregation",
+    "correlated_sub",
+    "rank_function"
+  ]
+}
