@@ -1,11 +1,11 @@
 # Graph Report - text-to-sql  (2026-05-13)
 
 ## Corpus Check
-- 32 files · ~29,126 words
+- 31 files · ~29,559 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 247 nodes · 319 edges · 41 communities detected
+- 245 nodes · 318 edges · 41 communities detected
 - Extraction: 93% EXTRACTED · 7% INFERRED · 0% AMBIGUOUS · INFERRED: 23 edges (avg confidence: 0.68)
 - Token cost: 0 input · 0 output
 
@@ -26,6 +26,7 @@
 - [[_COMMUNITY_Community 13|Community 13]]
 - [[_COMMUNITY_Community 14|Community 14]]
 - [[_COMMUNITY_Community 15|Community 15]]
+- [[_COMMUNITY_Community 20|Community 20]]
 - [[_COMMUNITY_Community 21|Community 21]]
 - [[_COMMUNITY_Community 22|Community 22]]
 - [[_COMMUNITY_Community 23|Community 23]]
@@ -50,7 +51,6 @@
 - [[_COMMUNITY_Community 42|Community 42]]
 - [[_COMMUNITY_Community 43|Community 43]]
 - [[_COMMUNITY_Community 44|Community 44]]
-- [[_COMMUNITY_Community 45|Community 45]]
 
 ## God Nodes (most connected - your core abstractions)
 1. `InferenceUserError` - 16 edges
@@ -142,103 +142,103 @@ Nodes (1): Day 2, Part 1 — Build the golden eval set.  WHY THIS FILE EXISTS:  
 Cohesion: 0.67
 Nodes (1): Pushes the LoRA adapter to HuggingFace Hub.  Usage:   python scripts/push_adapte
 
-### Community 21 - "Community 21"
+### Community 20 - "Community 20"
 Cohesion: 1.0
 Nodes (1): No-op — kept so demo.py import doesn't change.
 
-### Community 22 - "Community 22"
+### Community 21 - "Community 21"
 Cohesion: 1.0
 Nodes (1): Return (sql_string, latency_seconds).
 
-### Community 23 - "Community 23"
+### Community 22 - "Community 22"
 Cohesion: 1.0
 Nodes (1): Day 2, Part 1 — Build the golden eval set.  WHY THIS FILE EXISTS:   The golde
 
-### Community 24 - "Community 24"
+### Community 23 - "Community 23"
 Cohesion: 1.0
 Nodes (1): Day 1 Script: Download Spider + BIRD, filter to medium/hard complexity. Output:
 
-### Community 25 - "Community 25"
+### Community 24 - "Community 24"
 Cohesion: 1.0
 Nodes (1): easy   — single table, no joins, no subqueries     medium — 1-2 joins OR aggreg
 
-### Community 26 - "Community 26"
+### Community 25 - "Community 25"
 Cohesion: 1.0
 Nodes (1): Check SQL parses without error using sqlparse.
 
-### Community 27 - "Community 27"
+### Community 26 - "Community 26"
 Cohesion: 1.0
 Nodes (1): Day 1 Script: Generate 10 synthetic schemas (5 e-commerce, 5 fintech). These be
 
-### Community 28 - "Community 28"
+### Community 27 - "Community 27"
 Cohesion: 1.0
 Nodes (1): Generate CREATE TABLE statements for a schema (used in prompts).
 
-### Community 29 - "Community 29"
+### Community 28 - "Community 28"
 Cohesion: 1.0
 Nodes (1): Day 2, Part 2 — Baseline eval runner.  WHY THIS FILE EXISTS:   This runs GPT-
 
-### Community 30 - "Community 30"
+### Community 29 - "Community 29"
 Cohesion: 1.0
 Nodes (1): Load all schema JSONs into a dict keyed by schema name.
 
-### Community 31 - "Community 31"
+### Community 30 - "Community 30"
 Cohesion: 1.0
 Nodes (1): Load golden eval set from JSONL.
 
-### Community 32 - "Community 32"
+### Community 31 - "Community 31"
 Cohesion: 1.0
 Nodes (1): Given a column definition like 'user_id INT PK' or 'amount DECIMAL(10,2)',
 
-### Community 33 - "Community 33"
+### Community 32 - "Community 32"
 Cohesion: 1.0
 Nodes (1): Create an in-memory DuckDB, create tables from schema, insert 5 rows each.
 
-### Community 34 - "Community 34"
+### Community 33 - "Community 33"
 Cohesion: 1.0
 Nodes (1): Execute SQL, return (success, result_rows, error_message).      WHY TUPLE RETU
 
-### Community 35 - "Community 35"
+### Community 34 - "Community 34"
 Cohesion: 1.0
 Nodes (1): Compare two result sets, order-insensitively.      WHY ORDER-INSENSITIVE: The
 
-### Community 36 - "Community 36"
+### Community 35 - "Community 35"
 Cohesion: 1.0
 Nodes (1): Call GPT-4o and return (sql_output, latency_seconds).
 
-### Community 37 - "Community 37"
+### Community 36 - "Community 36"
 Cohesion: 1.0
 Nodes (1): Call Claude Sonnet and return (sql_output, latency_seconds).
 
-### Community 38 - "Community 38"
+### Community 37 - "Community 37"
 Cohesion: 1.0
 Nodes (1): Dispatch to the right model function.
 
-### Community 39 - "Community 39"
+### Community 38 - "Community 38"
 Cohesion: 1.0
 Nodes (1): Run all eval examples through the model.      Returns list of result dicts, on
 
-### Community 40 - "Community 40"
+### Community 39 - "Community 39"
 Cohesion: 1.0
 Nodes (1): Compute the key metrics for the comparison table.      Metrics explained:
 
-### Community 41 - "Community 41"
+### Community 40 - "Community 40"
 Cohesion: 1.0
 Nodes (1): Print the table that goes in your README.     This is the document interviewers
 
-### Community 42 - "Community 42"
+### Community 41 - "Community 41"
 Cohesion: 1.0
 Nodes (1): # WHY: We want a fair comparison. The fine-tune is trained with this exact
 
-### Community 43 - "Community 43"
+### Community 42 - "Community 42"
 Cohesion: 1.0
 Nodes (1): Prompt formatting utilities. Single source of truth — used by training, inferen
 
-### Community 44 - "Community 44"
+### Community 43 - "Community 43"
 Cohesion: 1.0
 Nodes (1): Returns messages list in Qwen2.5 chat format.     Used identically during train
 
-### Community 45 - "Community 45"
+### Community 44 - "Community 44"
 Cohesion: 1.0
 Nodes (1): Full training example with assistant turn included.     Output is a dict with '
 
@@ -251,62 +251,62 @@ Nodes (1): Full training example with assistant turn included.     Output is a d
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
 - **Thin community `Community 15`** (3 nodes): `main()`, `Pushes the LoRA adapter to HuggingFace Hub.  Usage:   python scripts/push_adapte`, `push_adapter_to_hub.py`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 21`** (1 nodes): `No-op — kept so demo.py import doesn't change.`
+- **Thin community `Community 20`** (1 nodes): `No-op — kept so demo.py import doesn't change.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 22`** (1 nodes): `Return (sql_string, latency_seconds).`
+- **Thin community `Community 21`** (1 nodes): `Return (sql_string, latency_seconds).`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 23`** (1 nodes): `Day 2, Part 1 — Build the golden eval set.  WHY THIS FILE EXISTS:   The golde`
+- **Thin community `Community 22`** (1 nodes): `Day 2, Part 1 — Build the golden eval set.  WHY THIS FILE EXISTS:   The golde`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 24`** (1 nodes): `Day 1 Script: Download Spider + BIRD, filter to medium/hard complexity. Output:`
+- **Thin community `Community 23`** (1 nodes): `Day 1 Script: Download Spider + BIRD, filter to medium/hard complexity. Output:`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 25`** (1 nodes): `easy   — single table, no joins, no subqueries     medium — 1-2 joins OR aggreg`
+- **Thin community `Community 24`** (1 nodes): `easy   — single table, no joins, no subqueries     medium — 1-2 joins OR aggreg`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 26`** (1 nodes): `Check SQL parses without error using sqlparse.`
+- **Thin community `Community 25`** (1 nodes): `Check SQL parses without error using sqlparse.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 27`** (1 nodes): `Day 1 Script: Generate 10 synthetic schemas (5 e-commerce, 5 fintech). These be`
+- **Thin community `Community 26`** (1 nodes): `Day 1 Script: Generate 10 synthetic schemas (5 e-commerce, 5 fintech). These be`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 28`** (1 nodes): `Generate CREATE TABLE statements for a schema (used in prompts).`
+- **Thin community `Community 27`** (1 nodes): `Generate CREATE TABLE statements for a schema (used in prompts).`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 29`** (1 nodes): `Day 2, Part 2 — Baseline eval runner.  WHY THIS FILE EXISTS:   This runs GPT-`
+- **Thin community `Community 28`** (1 nodes): `Day 2, Part 2 — Baseline eval runner.  WHY THIS FILE EXISTS:   This runs GPT-`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 30`** (1 nodes): `Load all schema JSONs into a dict keyed by schema name.`
+- **Thin community `Community 29`** (1 nodes): `Load all schema JSONs into a dict keyed by schema name.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 31`** (1 nodes): `Load golden eval set from JSONL.`
+- **Thin community `Community 30`** (1 nodes): `Load golden eval set from JSONL.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 32`** (1 nodes): `Given a column definition like 'user_id INT PK' or 'amount DECIMAL(10,2)',`
+- **Thin community `Community 31`** (1 nodes): `Given a column definition like 'user_id INT PK' or 'amount DECIMAL(10,2)',`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 33`** (1 nodes): `Create an in-memory DuckDB, create tables from schema, insert 5 rows each.`
+- **Thin community `Community 32`** (1 nodes): `Create an in-memory DuckDB, create tables from schema, insert 5 rows each.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 34`** (1 nodes): `Execute SQL, return (success, result_rows, error_message).      WHY TUPLE RETU`
+- **Thin community `Community 33`** (1 nodes): `Execute SQL, return (success, result_rows, error_message).      WHY TUPLE RETU`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 35`** (1 nodes): `Compare two result sets, order-insensitively.      WHY ORDER-INSENSITIVE: The`
+- **Thin community `Community 34`** (1 nodes): `Compare two result sets, order-insensitively.      WHY ORDER-INSENSITIVE: The`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 36`** (1 nodes): `Call GPT-4o and return (sql_output, latency_seconds).`
+- **Thin community `Community 35`** (1 nodes): `Call GPT-4o and return (sql_output, latency_seconds).`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 37`** (1 nodes): `Call Claude Sonnet and return (sql_output, latency_seconds).`
+- **Thin community `Community 36`** (1 nodes): `Call Claude Sonnet and return (sql_output, latency_seconds).`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 38`** (1 nodes): `Dispatch to the right model function.`
+- **Thin community `Community 37`** (1 nodes): `Dispatch to the right model function.`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 39`** (1 nodes): `Run all eval examples through the model.      Returns list of result dicts, on`
+- **Thin community `Community 38`** (1 nodes): `Run all eval examples through the model.      Returns list of result dicts, on`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 40`** (1 nodes): `Compute the key metrics for the comparison table.      Metrics explained:`
+- **Thin community `Community 39`** (1 nodes): `Compute the key metrics for the comparison table.      Metrics explained:`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 41`** (1 nodes): `Print the table that goes in your README.     This is the document interviewers`
+- **Thin community `Community 40`** (1 nodes): `Print the table that goes in your README.     This is the document interviewers`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 42`** (1 nodes): `# WHY: We want a fair comparison. The fine-tune is trained with this exact`
+- **Thin community `Community 41`** (1 nodes): `# WHY: We want a fair comparison. The fine-tune is trained with this exact`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 43`** (1 nodes): `Prompt formatting utilities. Single source of truth — used by training, inferen`
+- **Thin community `Community 42`** (1 nodes): `Prompt formatting utilities. Single source of truth — used by training, inferen`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 44`** (1 nodes): `Returns messages list in Qwen2.5 chat format.     Used identically during train`
+- **Thin community `Community 43`** (1 nodes): `Returns messages list in Qwen2.5 chat format.     Used identically during train`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 45`** (1 nodes): `Full training example with assistant turn included.     Output is a dict with '`
+- **Thin community `Community 44`** (1 nodes): `Full training example with assistant turn included.     Output is a dict with '`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `generate()` connect `Community 2` to `Community 8`, `Community 4`?**
-  _High betweenness centrality (0.047) - this node is a cross-community bridge._
+  _High betweenness centrality (0.048) - this node is a cross-community bridge._
 - **Why does `InferenceUserError` connect `Community 5` to `Community 2`, `Community 4`?**
   _High betweenness centrality (0.034) - this node is a cross-community bridge._
 - **Why does `generate_sql()` connect `Community 4` to `Community 8`, `Community 2`?**

@@ -9,5 +9,10 @@ wheels/
 # Virtual environments
 .venv
 .env
-claude_code_prompt.md
-hf-space-deploy/app/__pycache__/*
+.env.*
+
+# Graphify — regenerated AST caches (reports/graph.json kept tracked per project)
+graphify-out/cache/
+
+# Local editor / AI scratch
+CLAUDE_CODE_PROMPT.md

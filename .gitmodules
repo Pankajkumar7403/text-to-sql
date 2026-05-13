@@ -1,0 +1,3 @@
+[submodule "hf-space-deploy"]
+	path = hf-space-deploy
+	url = https://huggingface.co/spaces/pankaj74/text-to-sql.git
