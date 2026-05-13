@@ -36,21 +36,17 @@ ROOT     = Path(__file__).parent.parent
 EVAL_DIR = ROOT / "data" / "eval"
 EVAL_DIR.mkdir(parents=True, exist_ok=True)
 
-# ─────────────────────────────────────────────────────────────────────────────
 # THE GOLDEN EVAL SET
 # Format per entry:
 #   schema_name, question, sql, complexity, tags
 #
 # Tags explain WHAT SQL SKILL is being tested — useful later when you
 # do error analysis ("model fails on window functions 60% of the time")
-# ─────────────────────────────────────────────────────────────────────────────
 
 GOLDEN_EVAL = [
 
-    # ══════════════════════════════════════════════════════════════════════════
     # SCHEMA 1: marketplace_v1
     # Tables: users, sellers, categories, products, orders, order_items, reviews
-    # ══════════════════════════════════════════════════════════════════════════
 
     # Easy (6) ─ single table or trivial join, basic filter/aggregate
     {
@@ -331,10 +327,8 @@ WHERE consecutive_count >= 2""",
         "tags": ["cte", "window_function", "lag", "interval", "distinct"]
     },
 
-    # ══════════════════════════════════════════════════════════════════════════
     # SCHEMA 2: neobank_v1
     # Tables: customers, accounts, transactions, cards, card_transactions
-    # ══════════════════════════════════════════════════════════════════════════
 
     {"schema_name": "neobank_v1", "question": "How many customers have completed KYC verification?",
      "sql": "SELECT COUNT(*) AS verified_customers FROM customers WHERE kyc_status = 'verified'",
@@ -445,10 +439,8 @@ HAVING COUNT(*) > 3
 ORDER BY failed_count DESC""",
      "complexity": "hard", "tags": ["multi_join", "having", "date_group", "fraud_detection"]},
 
-    # ══════════════════════════════════════════════════════════════════════════
     # SCHEMA 3: lending_v1
     # Tables: borrowers, loan_products, loan_applications, loans, repayments
-    # ══════════════════════════════════════════════════════════════════════════
 
     {"schema_name": "lending_v1", "question": "How many loan applications are currently pending?",
      "sql": "SELECT COUNT(*) AS pending_applications FROM loan_applications WHERE status = 'pending'",
@@ -533,10 +525,8 @@ WHERE b.credit_score < (
 ORDER BY b.city, b.credit_score""",
      "complexity": "hard", "tags": ["correlated_subquery", "window_function", "partition_by"]},
 
-    # ══════════════════════════════════════════════════════════════════════════
     # SCHEMA 4: payments_v1
     # Tables: merchants, payment_links, payments, settlements, disputes
-    # ══════════════════════════════════════════════════════════════════════════
 
     {"schema_name": "payments_v1", "question": "How many merchants are currently active?",
      "sql": "SELECT COUNT(*) AS active_merchants FROM merchants WHERE active = TRUE",
@@ -604,10 +594,8 @@ FROM daily_volume
 ORDER BY merchant_id, pay_date""",
      "complexity": "hard", "tags": ["cte", "window_function", "rolling_avg", "rows_between"]},
 
-    # ══════════════════════════════════════════════════════════════════════════
     # SCHEMA 5: investment_v1
     # Tables: investors, instruments, portfolios, holdings, trades
-    # ══════════════════════════════════════════════════════════════════════════
 
     {"schema_name": "investment_v1", "question": "How many investors have an aggressive risk profile?",
      "sql": "SELECT COUNT(*) AS aggressive_investors FROM investors WHERE risk_profile = 'aggressive'",
@@ -658,10 +646,8 @@ WHERE tc.sells > tc.buys
 ORDER BY (tc.sells - tc.buys) DESC""",
      "complexity": "hard", "tags": ["cte", "conditional_agg", "join", "arithmetic"]},
 
-    # ══════════════════════════════════════════════════════════════════════════
     # SCHEMA 6: retail_analytics_v1
     # Tables: stores, products, inventory, promotions, transactions
-    # ══════════════════════════════════════════════════════════════════════════
 
     {"schema_name": "retail_analytics_v1", "question": "Which stores have inventory below reorder level for any product?",
      "sql": """SELECT s.store_id, s.city, p.name AS product_name, i.quantity, i.reorder_level
@@ -704,9 +690,7 @@ JOIN products p ON wp.product_id = p.product_id
 WHERE wp.weekly_revenue > wp.prev1 AND wp.prev1 > wp.prev2""",
      "complexity": "hard", "tags": ["cte", "window_function", "lag", "consecutive"]},
 
-    # ══════════════════════════════════════════════════════════════════════════
     # SCHEMA 7: subscription_ecom_v1
-    # ══════════════════════════════════════════════════════════════════════════
 
     {"schema_name": "subscription_ecom_v1", "question": "What is the monthly recurring revenue (MRR) by plan?",
      "sql": """SELECT pl.name AS plan_name, COUNT(s.sub_id) AS active_subs,
@@ -742,9 +726,7 @@ GROUP BY c.customer_id, c.email
 ORDER BY total_paid DESC""",
      "complexity": "hard", "tags": ["multi_join", "sum", "min_max", "group_by"]},
 
-    # ══════════════════════════════════════════════════════════════════════════
     # SCHEMA 8: logistics_v1
-    # ══════════════════════════════════════════════════════════════════════════
 
     {"schema_name": "logistics_v1", "question": "What is the average number of delivery attempts per parcel?",
      "sql": """SELECT AVG(attempt_count) AS avg_attempts
@@ -767,9 +749,7 @@ HAVING ROUND(100.0 * SUM(CASE WHEN outcome = 'success' THEN 1 ELSE 0 END) / COUN
 ORDER BY success_rate""",
      "complexity": "hard", "tags": ["join", "conditional_agg", "having", "arithmetic"]},
 
-    # ══════════════════════════════════════════════════════════════════════════
     # SCHEMA 9: saas_metrics_v1
-    # ══════════════════════════════════════════════════════════════════════════
 
     {"schema_name": "saas_metrics_v1", "question": "Which features are used most by enterprise accounts?",
      "sql": """SELECT f.name AS feature_name, COUNT(fu.usage_id) AS usage_count
@@ -816,9 +796,7 @@ GROUP BY d.account_id, m.monthly_users
 ORDER BY stickiness DESC""",
      "complexity": "hard", "tags": ["cte", "dau_mau", "nullif", "multi_join", "date_group"]},
 
-    # ══════════════════════════════════════════════════════════════════════════
     # SCHEMA 10: insurance_v1
-    # ══════════════════════════════════════════════════════════════════════════
 
     {"schema_name": "insurance_v1", "question": "What is the claim approval rate by insurance type?",
      "sql": """SELECT ip.type,

@@ -1,4 +1,3 @@
-# =============================================================================
 # Upload LoRA adapter to HuggingFace Hub
 # Copy-paste this entire file into a Kaggle notebook cell and run it.
 #
@@ -6,12 +5,10 @@
 #   1. Go to huggingface.co -> Settings -> Access Tokens
 #   2. Create a token with WRITE permission
 #   3. Paste the token below
-# =============================================================================
 
 HF_TOKEN = "hf_PASTE_YOUR_WRITE_TOKEN_HERE"   # <-- replace this
 ADAPTER_PATH = "/kaggle/working/qwen25_sql_v2_adapter"
 
-# ── Step 1: Login and get username ────────────────────────────────────────────
 from huggingface_hub import HfApi, login
 from pathlib import Path
 import os
@@ -23,7 +20,6 @@ REPO_ID = f"{username}/qwen25-sql-v2"
 print(f"Logged in as : {username}")
 print(f"Target repo  : {REPO_ID}")
 
-# ── Step 2: Verify adapter folder exists ──────────────────────────────────────
 adapter_dir = Path(ADAPTER_PATH)
 if not adapter_dir.exists():
     raise SystemExit(f"Adapter not found at {ADAPTER_PATH}\nCheck: !ls /kaggle/working/")
@@ -31,7 +27,6 @@ if not adapter_dir.exists():
 files = list(adapter_dir.iterdir())
 print(f"Adapter files: {[f.name for f in files]}")
 
-# ── Step 3: Create repo (safe if already exists) ──────────────────────────────
 print(f"\nCreating repo {REPO_ID} ...")
 url = api.create_repo(
     repo_id=REPO_ID,
@@ -41,7 +36,6 @@ url = api.create_repo(
 )
 print(f"Repo ready   : {url}")
 
-# ── Step 4: Upload ────────────────────────────────────────────────────────────
 print(f"\nUploading adapter files...")
 api.upload_folder(
     folder_path=ADAPTER_PATH,

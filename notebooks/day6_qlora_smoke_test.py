@@ -1,4 +1,3 @@
-# =============================================================================
 — QLoRA Smoke Test Training (Unsloth + TRL SFTTrainer)
 # Run this on Kaggle with T4 GPU enabled.
 #
@@ -23,15 +22,12 @@
 #   - LoRA adapters (rank 16) added to all linear projection layers
 #   - Only ~42M params out of 7.6B are trained
 #   - Unsloth: 2x faster training, 60% less VRAM than vanilla PEFT
-# =============================================================================
 
 
-# =============================================================================
 # CELL 1 — Install packages
 # Runtime: ~3-4 minutes
 # Install Unsloth from git HEAD — has the fix for the 'int has no .mean()' crash
 # that affects the PyPI release on Kaggle's transformers version.
-# =============================================================================
 
 # %%
 import subprocess
@@ -61,9 +57,7 @@ subprocess.run([
 print("Packages installed.")
 
 
-# =============================================================================
 # CELL 2 — Imports and config
-# =============================================================================
 
 # %%
 import json
@@ -93,11 +87,9 @@ if torch.cuda.is_available():
     print(f"VRAM:              {vram:.1f} GB")
 
 
-# =============================================================================
 # CELL 3 — Load model with Unsloth (4-bit)
 # Runtime: ~4-6 minutes (downloads ~15 GB)
 # Memory:  ~4.5 GB VRAM — leaves ~10 GB for activations + gradients
-# =============================================================================
 
 # %%
 print(f"Loading {MODEL_ID} with Unsloth 4-bit...")
@@ -113,9 +105,7 @@ vram_used = torch.cuda.memory_allocated() / 1e9
 print(f"Model loaded. VRAM used: {vram_used:.1f} GB")
 
 
-# =============================================================================
 # CELL 4 — Apply QLoRA adapters
-# =============================================================================
 
 # %%
 model = FastLanguageModel.get_peft_model(
@@ -138,9 +128,7 @@ print(f"Trainable params: {trainable:,} / {total:,} ({trainable/total*100:.2f}%)
 # Expected: ~42M / 7.6B = ~0.55%
 
 
-# =============================================================================
 # CELL 5 — Load dataset (100 stratified examples)
-# =============================================================================
 
 # %%
 def load_jsonl(path: Path) -> list[dict]:
@@ -195,11 +183,9 @@ dataset = dataset.map(apply_chat_template, batched=True, remove_columns=dataset.
 print(f"Dataset ready. Sample length: {len(dataset[0]['text'])} chars")
 
 
-# =============================================================================
 # CELL 6 — Configure SFTTrainer
 # TRL 0.12+ requires SFTConfig instead of TrainingArguments.
 # dataset_text_field and max_seq_length now live in SFTConfig, not SFTTrainer.__init__
-# =============================================================================
 
 # %%
 training_args = SFTConfig(
@@ -237,11 +223,9 @@ print(f"Steps per epoch:  {steps}")
 print(f"Estimated time:   {steps * 4 / 60:.0f}-{steps * 6 / 60:.0f} minutes on T4 (Unsloth)")
 
 
-# =============================================================================
 # CELL 7 — Train
 # Runtime: ~10-15 minutes for 100 examples on T4 with Unsloth
 # Loss should drop from ~2.0 toward ~0.5 over the steps.
-# =============================================================================
 
 # %%
 print("Starting smoke test training...\n")
@@ -255,10 +239,8 @@ print(f"  Final loss:  {trainer_stats.metrics['train_loss']:.4f}")
 print(f"  Peak VRAM:   {torch.cuda.max_memory_allocated()/1e9:.1f} GB")
 
 
-# =============================================================================
 # CELL 8 — Save the LoRA adapter
 # Only saves adapter weights (~64 MB), not the 15 GB base model.
-# =============================================================================
 
 # %%
 ADAPTER_DIR.mkdir(parents=True, exist_ok=True)
@@ -272,10 +254,8 @@ print(f"Files: {[f.name for f in adapter_files]}")
 print(f"Size:  {total_mb:.1f} MB")
 
 
-# =============================================================================
 # CELL 9 — Quick inference check
 # Confirms the adapter generates SQL. Does NOT measure accuracy.
-# =============================================================================
 
 # %%
 FastLanguageModel.for_inference(model)   # re-enables Unsloth's inference kernels
@@ -330,9 +310,7 @@ print()
 print("Day 8: set SMOKE_N=1023, num_train_epochs=3, report_to='wandb' for full run.")
 
 
-# =============================================================================
 # NOTES FOR DAY 8 (full training run)
-# =============================================================================
 #
 # Changes from smoke test -> full run:
 #   SMOKE_N (in Cell 5)      = 100  ->  remove; use all_examples directly

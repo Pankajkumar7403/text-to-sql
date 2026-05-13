@@ -69,9 +69,7 @@ SUMMARY_FILE   = PROC_DIR / "dataset_summary.json"
 VAL_FRACTION = 0.10   # 10% held out for validation during training
 
 
-# ──────────────────────────────────────────────────────────────────────────────
 # LOADING
-# ──────────────────────────────────────────────────────────────────────────────
 
 def load_schemas() -> dict[str, dict]:
     """Load all schema JSONs keyed by schema name."""
@@ -96,9 +94,7 @@ def load_jsonl(path: Path) -> list[dict]:
     return examples
 
 
-# ──────────────────────────────────────────────────────────────────────────────
 # FORMATTING
-# ──────────────────────────────────────────────────────────────────────────────
 
 def format_example(raw: dict, schemas: dict[str, dict]) -> dict | None:
     """
@@ -133,9 +129,7 @@ def format_example(raw: dict, schemas: dict[str, dict]) -> dict | None:
     }
 
 
-# ──────────────────────────────────────────────────────────────────────────────
 # DEDUPLICATION
-# ──────────────────────────────────────────────────────────────────────────────
 
 def deduplicate(examples: list[dict]) -> tuple[list[dict], int]:
     """
@@ -157,9 +151,7 @@ def deduplicate(examples: list[dict]) -> tuple[list[dict], int]:
     return unique, len(examples) - len(unique)
 
 
-# ──────────────────────────────────────────────────────────────────────────────
 # STRATIFIED SPLIT
-# ──────────────────────────────────────────────────────────────────────────────
 
 def stratified_split(
     examples: list[dict],
@@ -199,9 +191,7 @@ def stratified_split(
     return train, val
 
 
-# ──────────────────────────────────────────────────────────────────────────────
 # REPORTING
-# ──────────────────────────────────────────────────────────────────────────────
 
 def complexity_counts(examples: list[dict]) -> dict[str, int]:
     """Count examples per complexity bucket."""
@@ -268,9 +258,7 @@ def inspect_examples(examples: list[dict], n: int = 3, seed: int = 42) -> None:
         print(f"User turn (first 300 chars):\n{user_content[:300]}...")
 
 
-# ──────────────────────────────────────────────────────────────────────────────
 # ENTRYPOINT
-# ──────────────────────────────────────────────────────────────────────────────
 
 def main() -> None:
     parser = argparse.ArgumentParser(
@@ -292,11 +280,9 @@ def main() -> None:
     )
     args = parser.parse_args()
 
-    # ── 1. Load schemas ───────────────────────────────────────────────────────
     schemas = load_schemas()
     print(f"Loaded {len(schemas)} schemas.")
 
-    # ── 2. Load all data layers ───────────────────────────────────────────────
     if not LAYER2_FILE.exists():
         raise SystemExit(f"Layer 2 not found: {LAYER2_FILE}\nRun scripts/generate_synthetic.py first.")
 
@@ -314,7 +300,6 @@ def main() -> None:
 
     print(f"Total raw examples:        {len(raw_examples)}")
 
-    # ── 3. Format into chat messages ──────────────────────────────────────────
     formatted: list[dict] = []
     skipped = 0
     for raw in raw_examples:
@@ -326,15 +311,12 @@ def main() -> None:
 
     print(f"Formatted {len(formatted)} examples ({skipped} skipped — missing schema).")
 
-    # ── 4. Deduplicate ────────────────────────────────────────────────────────
     formatted, n_dupes = deduplicate(formatted)
     print(f"Deduplicated: removed {n_dupes} duplicate questions. {len(formatted)} remain.")
 
-    # ── 5. Stratified train/val split ─────────────────────────────────────────
     train, val = stratified_split(formatted, args.val_fraction, args.seed)
     print(f"Split: {len(train)} train / {len(val)} val (seed={args.seed}).")
 
-    # ── 6. Write output files ─────────────────────────────────────────────────
     PROC_DIR.mkdir(parents=True, exist_ok=True)
 
     for path, split in [(TRAIN_FILE, train), (VAL_FILE, val)]:
@@ -343,7 +325,6 @@ def main() -> None:
                 f.write(json.dumps(ex) + "\n")
         print(f"Wrote {len(split):>5} examples -> {path.name}")
 
-    # ── 7. Save summary JSON ──────────────────────────────────────────────────
     golden_n = 0
     if (EVAL_DIR / "golden_eval.jsonl").exists():
         golden_n = sum(1 for _ in open(EVAL_DIR / "golden_eval.jsonl") if _.strip())
@@ -364,7 +345,6 @@ def main() -> None:
         json.dump(summary, f, indent=2)
     print(f"Summary -> {SUMMARY_FILE.name}")
 
-    # ── 8. Report ─────────────────────────────────────────────────────────────
     print_summary(train, val, golden_n)
 
     if args.inspect:

@@ -106,9 +106,7 @@ COMPLEXITY_GUIDANCE: dict[str, str] = {
     ),
 }
 
-# ──────────────────────────────────────────────────────────────────────────────
 # SCHEMA LOADING
-# ──────────────────────────────────────────────────────────────────────────────
 
 def load_schemas(filter_names: list[str] | None = None) -> dict[str, dict]:
     """Load all schema JSONs, optionally limited to the names in filter_names."""
@@ -125,7 +123,6 @@ def load_schemas(filter_names: list[str] | None = None) -> dict[str, dict]:
     return schemas
 
 
-# ──────────────────────────────────────────────────────────────────────────────
 # DUCKDB SANDBOX
 #
 # WHY DUPLICATED FROM run_baseline_eval.py:
@@ -133,7 +130,6 @@ def load_schemas(filter_names: list[str] | None = None) -> dict[str, dict]:
 #   across scripts would require path manipulation hacks. Day 4 will move
 #   shared DuckDB utilities into src/data/db_utils.py once we set up the
 #   proper package structure.
-# ──────────────────────────────────────────────────────────────────────────────
 
 def _infer_value(col_def: str, row_idx: int) -> str:
     """
@@ -226,9 +222,7 @@ def validate_sql(conn: duckdb.DuckDBPyConnection, sql: str) -> tuple[bool, str]:
         return False, str(e)
 
 
-# ──────────────────────────────────────────────────────────────────────────────
 # GROQ BATCH GENERATION
-# ──────────────────────────────────────────────────────────────────────────────
 
 # The system prompt tells the LLM what format we need and what rules to follow.
 # Separate from src/data/prompt_template.py because this is a generation prompt
@@ -360,9 +354,7 @@ def call_groq_batch(
     return []
 
 
-# ──────────────────────────────────────────────────────────────────────────────
 # DRY RUN
-# ──────────────────────────────────────────────────────────────────────────────
 
 def generate_dry_run_pairs(schema: dict, complexity: str, n: int) -> list[dict]:
     """
@@ -382,9 +374,7 @@ def generate_dry_run_pairs(schema: dict, complexity: str, n: int) -> list[dict]:
     ]
 
 
-# ──────────────────────────────────────────────────────────────────────────────
 # W&B (optional)
-# ──────────────────────────────────────────────────────────────────────────────
 
 def init_wandb(n_schemas: int, target: int) -> Any | None:
     """
@@ -424,9 +414,7 @@ def log_wandb_schema(run: Any | None, schema_name: str, stats: dict) -> None:
         pass  # W&B logging is best-effort, never let it abort the main job
 
 
-# ──────────────────────────────────────────────────────────────────────────────
 # RESUME SUPPORT
-# ──────────────────────────────────────────────────────────────────────────────
 
 def load_completed_schemas(target: int) -> set[str]:
     """
@@ -452,9 +440,7 @@ def load_completed_schemas(target: int) -> set[str]:
     return {name for name, count in counts.items() if count >= target}
 
 
-# ──────────────────────────────────────────────────────────────────────────────
 # CORE GENERATION LOOP (per schema)
-# ──────────────────────────────────────────────────────────────────────────────
 
 def generate_for_schema(
     schema: dict,
@@ -513,7 +499,6 @@ def generate_for_schema(
             remaining = c_target - generated[complexity]
             batch_n   = min(BATCH_SIZE, remaining + max(4, remaining // 4))
 
-            # ── Generate batch ──────────────────────────────────────────────
             if dry_run:
                 pairs = generate_dry_run_pairs(schema, complexity, batch_n)
             else:
@@ -521,7 +506,6 @@ def generate_for_schema(
                 api_calls += 1
                 time.sleep(rate_sleep)  # TPM budget: 15s = ~4 calls/min × ~1500 tok/call ≈ 6000 TPM
 
-            # ── Validate each pair with DuckDB ──────────────────────────────
             for pair in pairs:
                 attempted += 1
                 if generated[complexity] >= c_target:
@@ -560,9 +544,7 @@ def generate_for_schema(
     return collected
 
 
-# ──────────────────────────────────────────────────────────────────────────────
 # ENTRYPOINT
-# ──────────────────────────────────────────────────────────────────────────────
 
 def main() -> None:
     parser = argparse.ArgumentParser(
@@ -655,7 +637,6 @@ def main() -> None:
     if run:
         run.finish()
 
-    # ── Final summary ─────────────────────────────────────────────────────────
     log.info(f"\nDone. Total new pairs written this run: {total_written}")
     log.info(f"Output file: {OUT_FILE}")
 

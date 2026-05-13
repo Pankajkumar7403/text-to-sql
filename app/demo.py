@@ -22,7 +22,6 @@ schemas = load_all_schemas()
 NAMES   = sorted(schemas.keys())
 load_model()
 
-# ── Helpers ───────────────────────────────────────────────────────────────────
 
 def _schema_markdown(name: str) -> str:
     s = schemas.get(name, {})
@@ -59,8 +58,6 @@ def run(schema_name: str, question: str) -> tuple[str, str]:
 
     return sql, status
 
-
-# ── Results tab data ───────────────────────────────────────────────────────────
 
 RESULTS_MD = """
 ## Fine-tuned Model Evaluation Results
@@ -135,7 +132,6 @@ ORDER BY month
 *The fine-tuned adapter weights are available at [pankaj74/qwen25-sql-v2](https://huggingface.co/pankaj74/qwen25-sql-v2).*
 """
 
-# ── UI ─────────────────────────────────────────────────────────────────────────
 
 with gr.Blocks(title="Text-to-SQL | Qwen2.5-7B") as demo:
     gr.Markdown(
@@ -147,7 +143,6 @@ with gr.Blocks(title="Text-to-SQL | Qwen2.5-7B") as demo:
 
     with gr.Tabs():
 
-        # ── Tab 1: Live demo ──────────────────────────────────────────────────
         with gr.Tab("Live Demo"):
             with gr.Row():
                 with gr.Column(scale=1, min_width=280):
@@ -193,7 +188,6 @@ with gr.Blocks(title="Text-to-SQL | Qwen2.5-7B") as demo:
                 inputs=[schema_dd, question_tb],
             )
 
-        # ── Tab 2: Fine-tuned results ─────────────────────────────────────────
         with gr.Tab("Fine-tuned Results"):
             gr.Markdown(RESULTS_MD)
 

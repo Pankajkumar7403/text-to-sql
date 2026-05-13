@@ -82,11 +82,9 @@ MAX_TOKENS_BY_COMPLEXITY: dict[str, int] = {
     "hard":   4096,
 }
 
-# ──────────────────────────────────────────────────────────────────────────────
 # PATTERN-SPECIFIC PROMPT CONSTRAINTS
 # Each pattern maps to an instruction injected into the generation prompt.
 # This FORCES Groq to use the specific SQL construct we want more examples of.
-# ──────────────────────────────────────────────────────────────────────────────
 PATTERN_CONSTRAINTS: dict[str, str] = {
     "cte": (
         "REQUIRED: Every SQL in this batch MUST use a WITH clause (CTE). "
@@ -146,9 +144,7 @@ Output format — respond with ONLY a valid JSON array, nothing else:
 """
 
 
-# ──────────────────────────────────────────────────────────────────────────────
 # SCHEMA LOADING
-# ──────────────────────────────────────────────────────────────────────────────
 
 def load_schemas(filter_names: list[str] | None = None) -> dict[str, dict]:
     schemas: dict[str, dict] = {}
@@ -174,9 +170,7 @@ def load_failure_analysis() -> dict:
         return json.load(f)
 
 
-# ──────────────────────────────────────────────────────────────────────────────
 # DUCKDB SANDBOX (same as generate_synthetic.py)
-# ──────────────────────────────────────────────────────────────────────────────
 
 def _infer_value(col_def: str, row_idx: int) -> str:
     col_lower = col_def.lower()
@@ -243,9 +237,7 @@ def validate_sql(conn: duckdb.DuckDBPyConnection, sql: str) -> tuple[bool, str]:
         return False, str(e)
 
 
-# ──────────────────────────────────────────────────────────────────────────────
 # GROQ GENERATION
-# ──────────────────────────────────────────────────────────────────────────────
 
 def build_targeted_prompt(
     schema: dict,
@@ -318,9 +310,7 @@ def call_groq_batch(
     return []
 
 
-# ──────────────────────────────────────────────────────────────────────────────
 # PER-SCHEMA GENERATION
-# ──────────────────────────────────────────────────────────────────────────────
 
 def load_existing_questions(path: Path) -> set[str]:
     """Load questions already in the output file to avoid duplicates."""
@@ -399,9 +389,7 @@ def generate_for_schema(
     return results
 
 
-# ──────────────────────────────────────────────────────────────────────────────
 # ENTRYPOINT
-# ──────────────────────────────────────────────────────────────────────────────
 
 def main() -> None:
     parser = argparse.ArgumentParser(
@@ -420,7 +408,6 @@ def main() -> None:
     if not GROQ_API_KEY and not args.dry_run:
         raise SystemExit("GROQ_API_KEY not found in .env. Add it and retry.")
 
-    # ── Load failure analysis ─────────────────────────────────────────────────
     analysis = load_failure_analysis()
     target_patterns = analysis.get("top_patterns_to_target", [])
     if not target_patterns:
@@ -429,14 +416,11 @@ def main() -> None:
     log.info(f"Targeting patterns: {target_patterns}")
     log.info(f"Complexity failures: {analysis.get('complexity_failures', {})}")
 
-    # ── Load schemas ──────────────────────────────────────────────────────────
     schemas = load_schemas(args.schemas)
 
-    # ── Load existing hard negatives to avoid re-generating ──────────────────
     existing_questions = load_existing_questions(OUT_FILE)
     log.info(f"Existing hard negatives: {len(existing_questions)} questions already in output file.")
 
-    # ── Generate per schema ───────────────────────────────────────────────────
     total_written = 0
     PROC_DIR.mkdir(parents=True, exist_ok=True)
 

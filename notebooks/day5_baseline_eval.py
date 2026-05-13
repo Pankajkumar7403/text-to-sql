@@ -1,4 +1,3 @@
-# =============================================================================
 # DAY 5 — Qwen2.5-7B-Instruct Baseline Eval (no fine-tuning)
 # Run this on Kaggle with T4 GPU enabled.
 #
@@ -22,13 +21,10 @@
 #   Medium: ~55-70%   (joins + aggregations — hit or miss on your schemas)
 #   Hard:   ~30-50%   (CTEs + window functions on novel schemas — likely weak)
 #   This is what you need to beat after fine-tuning.
-# =============================================================================
 
 
-# =============================================================================
 # CELL 1 — Install packages
 # Runtime: ~2 minutes
-# =============================================================================
 
 # %%
 import subprocess
@@ -42,9 +38,7 @@ subprocess.run([
 print("Packages installed.")
 
 
-# =============================================================================
 # CELL 2 — Imports and paths
-# =============================================================================
 
 # %%
 import json
@@ -76,18 +70,14 @@ if torch.cuda.is_available():
     print(f"VRAM:             {torch.cuda.get_device_properties(0).total_memory / 1e9:.1f} GB")
 
 
-# =============================================================================
 # CELL 3 — Load schemas and eval set
-# =============================================================================
 
 # %%
 
 
-# =============================================================================
 # CELL 4 — Load Qwen2.5-7B-Instruct in 4-bit
 # Runtime: ~4-6 minutes (downloads ~15 GB model weights)
 # Memory:  ~4.5 GB VRAM
-# =============================================================================
 
 # %%
 bnb_config = BitsAndBytesConfig(
@@ -111,9 +101,7 @@ vram_used = torch.cuda.memory_allocated() / 1e9
 print(f"Model loaded. VRAM used: {vram_used:.1f} GB")
 
 
-# =============================================================================
 # CELL 5 — Prompt builder and inference function
-# =============================================================================
 
 # %%
 # Same system prompt used in training and eval — must match exactly
@@ -182,9 +170,7 @@ def generate_sql(schema_sql: str, question: str, max_new_tokens: int = 256) -> t
     return sql, latency
 
 
-# =============================================================================
 # CELL 6 — DuckDB sandbox (same as run_baseline_eval.py)
-# =============================================================================
 
 # %%
 def _infer_value(col_def: str, row_idx: int) -> str:
@@ -272,10 +258,8 @@ def results_match(a: list | None, b: list | None) -> bool:
         return a == b
 
 
-# =============================================================================
 # CELL 7 — Run the eval loop
 # Runtime: ~15-25 minutes for 68 questions (each inference ~10-15s on T4)
-# =============================================================================
 
 # %%
 results = []
@@ -333,9 +317,7 @@ for i, ex in enumerate(examples, 1):
 print(f"\nDone. Errors -> generation: {errors['api']} | SQL exec: {errors['sql']}")
 
 
-# =============================================================================
 # CELL 8 — Compute and display results
-# =============================================================================
 
 # %%
 def compute_and_print_results(results: list, model_name: str) -> dict:
@@ -384,9 +366,7 @@ def compute_and_print_results(results: list, model_name: str) -> dict:
 summary = compute_and_print_results(results, MODEL_ID)
 
 
-# =============================================================================
 # CELL 9 — Save results (Kaggle saves /kaggle/working/ automatically)
-# =============================================================================
 
 # %%
 import datetime
@@ -410,10 +390,8 @@ print("\nDownload these from Kaggle Output tab and save to:")
 print("  data/eval/results/  (in your local project)")
 
 
-# =============================================================================
 # CELL 10 — Show failures (optional but useful)
 # See which question types the base model gets wrong so you know what to target
-# =============================================================================
 
 # %%
 failures = [r for r in results if not r["exec_match"]]

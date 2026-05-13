@@ -19,8 +19,6 @@ RAW.mkdir(parents=True, exist_ok=True)
 PROCESSED.mkdir(parents=True, exist_ok=True)
 
 
-# ── Complexity heuristics ───────────────────────────────────────────────────
-
 def count_joins(sql: str) -> int:
     return sql.upper().count(" JOIN ")
 
@@ -59,8 +57,6 @@ def is_valid_sql(sql: str) -> bool:
     except Exception:
         return False
 
-
-# ── Spider ──────────────────────────────────────────────────────────────────
 
 def process_spider():
     print("\n── Spider ──")
@@ -112,8 +108,6 @@ def process_spider():
     print(df["complexity"].value_counts().to_string())
     return results
 
-
-# ── BIRD ────────────────────────────────────────────────────────────────────
 
 def process_bird():
     print("\n── BIRD ──")
@@ -170,8 +164,6 @@ def process_bird():
     print(f"  Saved → {out}")
     return results
 
-
-# ── Merge + stats ───────────────────────────────────────────────────────────
 
 def merge_and_report(spider_data, bird_data):
     all_data = spider_data + bird_data

@@ -68,8 +68,6 @@ RATE_SLEEP        = 15.0
 COMPLEXITY_MIX = {"medium": 0.40, "hard": 0.60}
 
 
-# ── Style rules derived directly from golden eval failure analysis ────────────
-
 STYLE_RULES = """\
 STYLE RULES — follow all of these exactly:
 
@@ -118,8 +116,6 @@ Output format — respond with ONLY a valid JSON array, nothing else:
 ]\
 """
 
-
-# ── Schema and data loading ───────────────────────────────────────────────────
 
 def load_schemas(filter_names: list[str] | None = None) -> dict[str, dict]:
     schemas: dict[str, dict] = {}
@@ -180,8 +176,6 @@ def count_existing_per_schema(path: Path) -> dict[str, int]:
                     pass
     return counts
 
-
-# ── DuckDB sandbox (same as other generators) ─────────────────────────────────
 
 def _infer_value(col_def: str, row_idx: int) -> str:
     col_lower = col_def.lower()
@@ -247,8 +241,6 @@ def validate_sql(conn: duckdb.DuckDBPyConnection, sql: str) -> tuple[bool, str]:
         return False, str(e)
 
 
-# ── Prompt building ───────────────────────────────────────────────────────────
-
 def build_prompt(schema: dict, complexity: str, n: int,
                  demos: list[dict]) -> str:
     """
@@ -280,8 +272,6 @@ def build_prompt(schema: dict, complexity: str, n: int,
     )
 
 
-# ── Groq API call ─────────────────────────────────────────────────────────────
-
 def call_groq(client: OpenAI, prompt: str, complexity: str,
               retries: int = 3) -> list[dict]:
     max_tokens = 4096 if complexity == "hard" else 2048
@@ -311,8 +301,6 @@ def call_groq(client: OpenAI, prompt: str, complexity: str,
             time.sleep(wait)
     return []
 
-
-# ── Per-schema generation ─────────────────────────────────────────────────────
 
 def generate_for_schema(schema: dict, client: OpenAI, target: int,
                         demos: list[dict], existing: set[str],
@@ -364,8 +352,6 @@ def generate_for_schema(schema: dict, client: OpenAI, target: int,
     conn.close()
     return results
 
-
-# ── Entrypoint ────────────────────────────────────────────────────────────────
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Generate style-aligned training data.")

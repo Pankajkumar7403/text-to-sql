@@ -96,7 +96,6 @@ def main() -> None:
     print(f"Correct: {len(correct)} | Failed: {len(failures)} "
           f"({len(failures)/len(results)*100:.1f}%)\n")
 
-    # ── Count patterns in failures and in correct answers ────────────────────
     fail_pattern_ctr    = Counter()
     correct_pattern_ctr = Counter()
     pattern_fail_examples: dict[str, list[dict]] = defaultdict(list)
@@ -117,13 +116,11 @@ def main() -> None:
         for p in detect_patterns(r["reference_sql"]):
             correct_pattern_ctr[p] += 1
 
-    # ── Compute fail rate per pattern ────────────────────────────────────────
     pattern_fail_rates: dict[str, float] = {}
     for p in fail_pattern_ctr:
         total = fail_pattern_ctr[p] + correct_pattern_ctr.get(p, 0)
         pattern_fail_rates[p] = fail_pattern_ctr[p] / total * 100 if total > 0 else 0
 
-    # ── Print report ─────────────────────────────────────────────────────────
     print("=" * 65)
     print("FAILURE PATTERN ANALYSIS")
     print("=" * 65)
@@ -170,7 +167,6 @@ def main() -> None:
             print(f"  Error:    {r['gen_error'][:80]}")
         print(f"  Patterns: {pats}")
 
-    # ── Determine top patterns to target ─────────────────────────────────────
     # Priority: high fail rate AND enough occurrences (>= 2) to matter
     top_patterns = [
         p for p, rate in sorted(pattern_fail_rates.items(), key=lambda x: -x[1])
@@ -184,7 +180,6 @@ def main() -> None:
         print(f"  {p:<22}: {fail_pattern_ctr[p]} failures, "
               f"{pattern_fail_rates[p]:.0f}% fail rate")
 
-    # ── Save machine-readable output ─────────────────────────────────────────
     PROC_DIR.mkdir(parents=True, exist_ok=True)
     output = {
         "source_file":            results_path.name,

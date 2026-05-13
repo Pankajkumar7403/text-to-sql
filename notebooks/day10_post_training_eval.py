@@ -1,4 +1,3 @@
-# =============================================================================
 # DAY 10 — Post-Training Eval (QLoRA fine-tuned Qwen2.5-7B)
 # Works on both Kaggle (T4 GPU) and locally (CPU/GPU).
 #
@@ -17,12 +16,9 @@
 # LOCAL SETUP:
 #   pip install transformers peft accelerate duckdb torch
 #   Adapter must be at: data/models/qwen25_sql_v2/
-# =============================================================================
 
 
-# =============================================================================
 # CELL 1 — Install packages (Kaggle only)
-# =============================================================================
 
 # %%
 import os
@@ -41,9 +37,7 @@ else:
     print("Local run — skipping install.")
 
 
-# =============================================================================
 # CELL 2 — Imports and paths
-# =============================================================================
 
 # %%
 import datetime
@@ -90,10 +84,8 @@ if torch.cuda.is_available():
     print(f"VRAM:            {torch.cuda.get_device_properties(0).total_memory/1e9:.1f} GB")
 
 
-# =============================================================================
 # CELL 3 — Load base model + adapter (unsloth — 4-bit, fast inference)
 # Runtime: ~5-7 minutes
-# =============================================================================
 
 # %%
 print(f"Loading model + LoRA adapter from {ADAPTER_DIR}...")
@@ -110,9 +102,7 @@ model.generation_config.max_length = None
 print(f"Model loaded. VRAM: {torch.cuda.memory_allocated()/1e9:.1f} GB")
 
 
-# =============================================================================
 # CELL 4 — Load schemas and eval set
-# =============================================================================
 
 # %%
 def load_schemas(schema_dir: Path) -> dict[str, dict]:
@@ -153,9 +143,7 @@ for ex in examples:
 print(f"By complexity:   {dict(complexity_counts)}")
 
 
-# =============================================================================
 # CELL 5 — Inference function
-# =============================================================================
 
 # %%
 SYSTEM_PROMPT = """You are an expert SQL engineer. Given a database schema and a natural language question, write a correct and efficient SQL query.
@@ -192,9 +180,7 @@ def generate_sql(schema_sql: str, question: str, max_new_tokens: int = 256) -> t
     return sql, latency
 
 
-# =============================================================================
 # CELL 6 — DuckDB sandbox
-# =============================================================================
 
 # %%
 def _infer_value(col_def: str, row_idx: int) -> str:
@@ -275,10 +261,8 @@ def results_match(a: list | None, b: list | None) -> bool:
         return a == b
 
 
-# =============================================================================
 # CELL 7 — Run eval loop
 # GPU: ~15-25 min. CPU: several hours (consider running overnight).
-# =============================================================================
 
 # %%
 results = []
@@ -330,9 +314,7 @@ for i, ex in enumerate(examples, 1):
 print(f"\nDone. Errors -> generation: {errors['gen']} | invalid SQL: {errors['sql']}")
 
 
-# =============================================================================
 # CELL 8 — Compute and display results
-# =============================================================================
 
 # %%
 # v1 fine-tuned (Day 6 smoke test) — delta shows v1 → v2 improvement.
@@ -406,9 +388,7 @@ def compute_and_print_results(results: list, model_tag: str) -> dict:
 summary = compute_and_print_results(results, "Qwen2.5-7B-QLoRA-v2")
 
 
-# =============================================================================
 # CELL 9 — Save results
-# =============================================================================
 
 # %%
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
@@ -428,9 +408,7 @@ print(f"Results -> {results_file}")
 print(f"Summary -> {summary_file}")
 
 
-# =============================================================================
 # CELL 10 — Show top failures
-# =============================================================================
 
 # %%
 failures = [r for r in results if not r["exec_match"]]

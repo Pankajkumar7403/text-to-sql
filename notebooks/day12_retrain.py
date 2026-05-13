@@ -1,4 +1,3 @@
-# =============================================================================
 # DAY 12 — Retrain on original + hard negatives (Unsloth + TRL SFTTrainer)
 # Run this on Kaggle with T4 GPU enabled.
 #
@@ -26,12 +25,9 @@
 #     layer3_hard_negatives.jsonl        (700 hard negatives — upload this)
 #     data/raw/schemas/*.json            (10 schema files — upload these)
 #   Enable GPU T4 x2
-# =============================================================================
 
 
-# =============================================================================
 # CELL 1 — Install packages
-# =============================================================================
 
 # %%
 import subprocess
@@ -50,9 +46,7 @@ subprocess.run([
 print("Packages installed.")
 
 
-# =============================================================================
 # CELL 2 — Imports and config
-# =============================================================================
 
 # %%
 import json
@@ -83,10 +77,8 @@ if torch.cuda.is_available():
     print(f"VRAM:                   {torch.cuda.get_device_properties(0).total_memory/1e9:.1f} GB")
 
 
-# =============================================================================
 # CELL 3 — Load base model + fresh LoRA
 # Runtime: ~5-7 minutes
-# =============================================================================
 
 # %%
 print(f"Loading {MODEL_ID} in 4-bit...")
@@ -117,9 +109,7 @@ total     = sum(p.numel() for p in model.parameters())
 print(f"Trainable params: {trainable:,} / {total:,} ({trainable/total*100:.2f}%)")
 
 
-# =============================================================================
 # CELL 4 — Build combined dataset (original + hard negatives)
-# =============================================================================
 
 # %%
 def load_jsonl(path: Path) -> list[dict]:
@@ -141,11 +131,9 @@ Rules:
 - Prefer CTEs over deeply nested subqueries when it improves readability
 - Never use SELECT * -- always specify column names"""
 
-# --- Original training data (already has "messages" field) ---
 original = load_jsonl(TRAIN_FILE)
 print(f"Original examples: {len(original)}")
 
-# --- Hard negatives (raw format — need schema SQL + chat template applied) ---
 schemas: dict[str, dict] = {}
 for f in DATA_DIR.glob("*.json"):
     try:
@@ -174,7 +162,6 @@ for ex in raw_hard_negs:
 
 print(f"Hard negatives formatted: {len(hard_negs)} ({skipped} skipped — missing schema)")
 
-# --- Combine and shuffle ---
 combined = original + hard_negs
 random.seed(42)
 random.shuffle(combined)
@@ -184,9 +171,7 @@ print(f"\nCombined: {len(combined)} examples")
 print(f"  easy {counts['easy']} | medium {counts['medium']} | hard {counts['hard']}")
 
 
-# =============================================================================
 # CELL 5 — Apply chat template and build HuggingFace Dataset
-# =============================================================================
 
 # %%
 def apply_chat_template(examples: dict) -> dict:
@@ -202,10 +187,8 @@ dataset = dataset.map(apply_chat_template, batched=True, remove_columns=dataset.
 print(f"Dataset ready: {len(dataset)} examples | sample length: {len(dataset[0]['text'])} chars")
 
 
-# =============================================================================
 # CELL 6 — Configure SFTTrainer
 # lr=2e-4 and 3 epochs — same as Day 6, now with better data.
-# =============================================================================
 
 # %%
 steps_per_epoch = len(dataset) // (2 * 4)   # batch_size=2, grad_accum=4 → effective=8
@@ -243,13 +226,11 @@ trainer = SFTTrainer(
 )
 
 
-# =============================================================================
 # CELL 7 — Train
 # Expected: ~90-120 minutes on T4.
 # Target loss: 0.15-0.35
 #   < 0.10 → overfitting (same as Day 6) — reduce epochs to 2 next time
 #   > 0.50 → underfitting — add an epoch
-# =============================================================================
 
 # %%
 print("Starting Day 12 training...\n")
@@ -267,9 +248,7 @@ print("If loss < 0.10: overfitting — try 2 epochs next run")
 print("If loss > 0.50: underfitting — add an epoch")
 
 
-# =============================================================================
 # CELL 8 — Save adapter (v2)
-# =============================================================================
 
 # %%
 ADAPTER_DIR.mkdir(parents=True, exist_ok=True)
@@ -281,10 +260,8 @@ print(f"Adapter v2 saved: {ADAPTER_DIR.name}/  ({total_mb:.1f} MB)")
 print("Download from Kaggle Output tab -> save locally to data/models/qwen25_sql_v2/")
 
 
-# =============================================================================
 # CELL 9 — Quick sanity check on a hard example
 # Tests a window-function query — the #1 failure pattern (70% fail rate in v1).
-# =============================================================================
 
 # %%
 FastLanguageModel.for_inference(model)

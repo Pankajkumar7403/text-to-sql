@@ -68,12 +68,10 @@ SCHEMA_DIR = ROOT / "data" / "raw" / "schemas"
 RESULTS    = EVAL_DIR / "results"
 RESULTS.mkdir(parents=True, exist_ok=True)
 
-# ── Groq config — read from .env ─────────────────────────────────────────────
 GROQ_API_KEY  = os.getenv("GROQ_API_KEY", "")
 GROQ_BASE_URL = os.getenv("GROQ_BASE_URL", "https://api.groq.com/openai/v1")
 GROQ_MODEL    = os.getenv("GROQ_MODEL",    "llama-3.3-70b-versatile")
 
-# ── System prompt — identical to what the fine-tuned model will use ───────────
 # WHY: Fair comparison requires the same prompt for all models.
 # The fine-tune is trained on examples formatted with this exact system prompt.
 SYSTEM_PROMPT = """You are an expert SQL engineer. Given a database schema and a natural language question, write a correct and efficient SQL query.
@@ -86,9 +84,7 @@ Rules:
 - Never use SELECT * — always specify column names"""
 
 
-# ─────────────────────────────────────────────────────────────────────────────
 # DATA LOADING
-# ─────────────────────────────────────────────────────────────────────────────
 
 def load_schemas() -> dict:
     """Load all schema JSONs into a dict keyed by schema name."""
@@ -117,7 +113,6 @@ def load_eval_set(limit: int | None = None) -> list:
     return examples
 
 
-# ─────────────────────────────────────────────────────────────────────────────
 # DUCKDB SANDBOX
 #
 # WHY SYNTHETIC ROWS:
@@ -129,7 +124,6 @@ def load_eval_set(limit: int | None = None) -> list:
 #   SQLite lacks window functions (ROW_NUMBER, LAG, RANK), DATE_TRUNC,
 #   and INTERVAL arithmetic. Our hard eval questions use all of these.
 #   DuckDB supports the full SQL standard we care about.
-# ─────────────────────────────────────────────────────────────────────────────
 
 def _infer_value(col_def: str, row_idx: int) -> str:
     """
@@ -268,9 +262,7 @@ def results_match(a: list | None, b: list | None) -> bool:
         return a == b
 
 
-# ─────────────────────────────────────────────────────────────────────────────
 # GROQ INFERENCE
-# ─────────────────────────────────────────────────────────────────────────────
 
 def build_groq_client() -> OpenAI:
     """
@@ -331,9 +323,7 @@ def call_groq(
     return sql, latency
 
 
-# ─────────────────────────────────────────────────────────────────────────────
 # EVAL LOOP
-# ─────────────────────────────────────────────────────────────────────────────
 
 def run_eval(
     model: str,
@@ -366,7 +356,6 @@ def run_eval(
         question   = ex["question"]
         ref_sql    = ex["sql"]
 
-        # ── Step 1: Get SQL from model (or use reference in dry-run) ─────────
         if dry_run:
             # Use reference SQL so pipeline scores 100% — confirms eval logic works
             gen_sql = ref_sql
@@ -387,7 +376,6 @@ def run_eval(
                 })
                 continue
 
-        # ── Step 2: Execute both SQLs in a fresh DuckDB sandbox ──────────────
         conn = build_sandbox(schema)
         valid_sql, gen_result, gen_error = execute_sql(conn, gen_sql)
         _,          ref_result, _        = execute_sql(conn, ref_sql)
@@ -396,7 +384,6 @@ def run_eval(
         if not valid_sql:
             sql_errors += 1
 
-        # ── Step 3: Score ─────────────────────────────────────────────────────
         match = results_match(gen_result, ref_result) if valid_sql else False
 
         results.append({
@@ -413,20 +400,13 @@ def run_eval(
             "latency_s":     round(latency, 3),
         })
 
-        # ── Rate limit: 2s sleep = max 30 req/min = within Groq free tier ────
-        # WHY SLEEP NOT RETRY: Sleeping proactively is simpler and more
-        # predictable than catching 429s and backing off. At 2s/request
-        # we stay comfortably under the 30 RPM cap.
+        # Groq free tier ~30 RPM; proactive sleep avoids 429 backoff logic.
         if not dry_run:
             time.sleep(2.0)
 
     print(f"  Errors → API: {api_errors} | SQL exec: {sql_errors}")
     return results
 
-
-# ─────────────────────────────────────────────────────────────────────────────
-# METRICS
-# ─────────────────────────────────────────────────────────────────────────────
 
 def compute_summary(results: list, model: str) -> dict:
     """
@@ -484,9 +464,7 @@ def print_results_table(summaries: list) -> None:
     print("Your fine-tuned Qwen2.5-7B must beat the 'Hard' column to have a story.")
 
 
-# ─────────────────────────────────────────────────────────────────────────────
 # ENTRYPOINT
-# ─────────────────────────────────────────────────────────────────────────────
 
 def main() -> None:
     parser = argparse.ArgumentParser(
