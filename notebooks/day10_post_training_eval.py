@@ -1,47 +1,44 @@
 # =============================================================================
 # DAY 10 — Post-Training Eval (QLoRA fine-tuned Qwen2.5-7B)
-# Run this on Kaggle with T4 GPU enabled — same session as training, or new one.
+# Works on both Kaggle (T4 GPU) and locally (CPU/GPU).
 #
 # WHAT THIS MEASURES:
 #   Execution accuracy of the fine-tuned model on the 68 golden eval questions.
-#   Compare against baseline (data/eval/results/baseline_summary_*.json):
-#     Baseline: Easy 81.0% | Medium 34.6% | Hard 33.3% | Overall 48.5%
-#   The delta is your headline portfolio result.
+#   Baseline (pre-training):  Easy 81.0% | Medium 34.6% | Hard 33.3% | Overall 48.5%
+#   v1 fine-tuned (Day 6):    Easy 85.7% | Medium 38.5% | Hard 33.3% | Overall 51.5%
+#   The delta vs v1 is the headline portfolio result for Day 12.
 #
-# SETUP:
-#   Option A — same Kaggle session as training:
-#     Skip Cell 3 (model already loaded). Start from Cell 4.
-#   Option B — new Kaggle session:
-#     1. Add your adapter to the "text-to-sql-data" dataset OR upload as a
-#        separate dataset "qwen25-sql-adapter" and attach it.
-#     2. Run all cells from Cell 1.
+# KAGGLE SETUP:
+#   1. Upload your adapter folder (data/models/qwen25_sql_v2/) as a new Kaggle
+#      dataset named "qwen25-sql-v2-adapter".
+#   2. Attach both "text-to-sql-data" and "qwen25-sql-v2-adapter" to this notebook.
+#   3. Enable T4 GPU, run all cells.
 #
-# ADAPTER PATH:
-#   If you saved from training: /kaggle/working/qwen25_sql_smoke_adapter/
-#   If uploaded as a dataset:   /kaggle/input/qwen25-sql-adapter/
-#   Edit ADAPTER_DIR in Cell 2 to match.
+# LOCAL SETUP:
+#   pip install transformers peft accelerate duckdb torch
+#   Adapter must be at: data/models/qwen25_sql_v2/
 # =============================================================================
 
 
 # =============================================================================
-# CELL 1 — Install packages
+# CELL 1 — Install packages (Kaggle only)
 # =============================================================================
 
 # %%
+import os
 import subprocess
-subprocess.run([
-    "pip", "install", "--quiet",
-    "unsloth",
-    "peft>=0.12.0",
-    "duckdb>=1.2.2",
-    "accelerate>=0.34.0",
-    "bitsandbytes>=0.43.0",
-], check=True)
-subprocess.run([
-    "pip", "install", "--quiet", "--upgrade", "--no-cache-dir", "--no-deps",
-    "git+https://github.com/unslothai/unsloth.git",
-], check=True)
-print("Packages installed.")
+
+ON_KAGGLE = os.path.exists("/kaggle/working")
+
+if ON_KAGGLE:
+    subprocess.run(["pip", "install", "--quiet", "unsloth"], check=True)
+    subprocess.run(["pip", "install", "--quiet", "--upgrade", "--no-cache-dir", "--no-deps",
+                    "git+https://github.com/unslothai/unsloth.git"], check=True)
+    subprocess.run(["pip", "install", "--quiet",
+                    "duckdb>=1.2.2", "accelerate>=0.34.0"], check=True)
+    print("Packages installed.")
+else:
+    print("Local run — skipping install.")
 
 
 # =============================================================================
@@ -49,6 +46,7 @@ print("Packages installed.")
 # =============================================================================
 
 # %%
+import datetime
 import json
 import time
 from collections import defaultdict
@@ -58,54 +56,58 @@ import duckdb
 import torch
 from unsloth import FastLanguageModel
 
-DATA_DIR    = Path("/kaggle/input/text-to-sql-data")
-OUTPUT_DIR  = Path("/kaggle/working")
+if ON_KAGGLE:
+    OUTPUT_DIR  = Path("/kaggle/working")
 
-EVAL_FILE   = DATA_DIR / "golden_eval.jsonl"
-SCHEMA_DIR  = DATA_DIR
+    # Adapter: prefer same-session /kaggle/working first, then uploaded dataset
+    _adapter_working = Path("/kaggle/working/qwen25_sql_v2_adapter")
+    _adapter_input   = Path("/kaggle/input/qwen25-sql-v2-adapter")
+    ADAPTER_DIR = _adapter_working if _adapter_working.exists() else _adapter_input
+
+    # Eval data: Kaggle datasets may nest files under a version subfolder
+    # Walk /kaggle/input/text-to-sql-data to find golden_eval.jsonl wherever it lands
+    _data_root = Path("/kaggle/input/text-to-sql-data")
+    _eval_candidates = list(_data_root.rglob("golden_eval.jsonl")) if _data_root.exists() else []
+    EVAL_FILE  = _eval_candidates[0] if _eval_candidates else _data_root / "golden_eval.jsonl"
+    SCHEMA_DIR = EVAL_FILE.parent  # schemas live next to golden_eval.jsonl
+else:
+    ROOT        = Path(__file__).parent.parent
+    EVAL_FILE   = ROOT / "data" / "eval" / "golden_eval.jsonl"
+    SCHEMA_DIR  = ROOT / "data" / "raw" / "schemas"
+    OUTPUT_DIR  = ROOT / "data" / "eval" / "results"
+    ADAPTER_DIR = ROOT / "data" / "models" / "qwen25_sql_v2"
 
 MODEL_ID    = "Qwen/Qwen2.5-7B-Instruct"
 MAX_SEQ_LEN = 2048
 
-# If running in same session as training, adapter is in /kaggle/working/
-# If new session and you uploaded adapter as a dataset, change path below.
-ADAPTER_DIR = Path("/kaggle/working/qwen25_sql_smoke_adapter")
-
-print(f"Eval file exists:    {EVAL_FILE.exists()}")
-print(f"Adapter dir exists:  {ADAPTER_DIR.exists()}")
-print(f"GPU available:       {torch.cuda.is_available()}")
+print(f"Running on:      {'Kaggle' if ON_KAGGLE else 'Local'}")
+print(f"Eval file:       {EVAL_FILE.exists()}  ({EVAL_FILE})")
+print(f"Schema dir:      {SCHEMA_DIR.exists()}  ({SCHEMA_DIR})")
+print(f"Adapter dir:     {ADAPTER_DIR.exists()}  ({ADAPTER_DIR})")
+print(f"CUDA available:  {torch.cuda.is_available()}")
 if torch.cuda.is_available():
-    print(f"GPU:                 {torch.cuda.get_device_name(0)}")
-    print(f"VRAM:                {torch.cuda.get_device_properties(0).total_memory/1e9:.1f} GB")
+    print(f"GPU:             {torch.cuda.get_device_name(0)}")
+    print(f"VRAM:            {torch.cuda.get_device_properties(0).total_memory/1e9:.1f} GB")
 
 
 # =============================================================================
-# CELL 3 — Load base model + adapter
-# Skip this cell if running in the same session as training (model still loaded).
+# CELL 3 — Load base model + adapter (unsloth — 4-bit, fast inference)
 # Runtime: ~5-7 minutes
 # =============================================================================
 
 # %%
-print(f"Loading base model {MODEL_ID} in 4-bit...")
+print(f"Loading model + LoRA adapter from {ADAPTER_DIR}...")
 model, tokenizer = FastLanguageModel.from_pretrained(
-    model_name=MODEL_ID,
+    model_name=str(ADAPTER_DIR),   # unsloth reads adapter_config.json and loads base model automatically
     max_seq_length=MAX_SEQ_LEN,
     dtype=None,
     load_in_4bit=True,
 )
 
-print(f"Loading fine-tuned adapter from {ADAPTER_DIR}...")
-model.load_adapter(str(ADAPTER_DIR))
-
-# Switch to inference mode: disables dropout, enables Unsloth inference kernels
 FastLanguageModel.for_inference(model)
-
-# Clear max_length from generation config — it conflicts with max_new_tokens and
-# causes a warning on every generate() call. max_new_tokens takes precedence anyway.
 model.generation_config.max_length = None
 
-vram = torch.cuda.memory_allocated() / 1e9
-print(f"Model + adapter loaded. VRAM: {vram:.1f} GB")
+print(f"Model loaded. VRAM: {torch.cuda.memory_allocated()/1e9:.1f} GB")
 
 
 # =============================================================================
@@ -116,12 +118,13 @@ print(f"Model + adapter loaded. VRAM: {vram:.1f} GB")
 def load_schemas(schema_dir: Path) -> dict[str, dict]:
     schemas: dict[str, dict] = {}
     for f in schema_dir.glob("*.json"):
-        if f.name in ("index.json", "golden_eval.jsonl"):
+        if f.name == "index.json":
             continue
         with open(f) as fh:
             try:
                 s = json.load(fh)
-                if "name" in s and "create_sql" in s:
+                # Only accept schema files — must have name + create_sql + tables
+                if "name" in s and "create_sql" in s and "tables" in s:
                     schemas[s["name"]] = s
             except Exception:
                 pass
@@ -151,8 +154,7 @@ print(f"By complexity:   {dict(complexity_counts)}")
 
 
 # =============================================================================
-# CELL 5 — Prompt builder and inference function
-# Same SYSTEM_PROMPT and format as training — must match exactly.
+# CELL 5 — Inference function
 # =============================================================================
 
 # %%
@@ -169,10 +171,10 @@ Rules:
 def generate_sql(schema_sql: str, question: str, max_new_tokens: int = 256) -> tuple[str, float]:
     messages = [
         {"role": "system", "content": SYSTEM_PROMPT},
-        {"role": "user", "content": f"Schema:\n{schema_sql.strip()}\n\nQuestion: {question.strip()}\n\nSQL:"},
+        {"role": "user",   "content": f"Schema:\n{schema_sql.strip()}\n\nQuestion: {question.strip()}\n\nSQL:"},
     ]
-    text = tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
-    inputs = tokenizer(text, return_tensors="pt").to(model.device)
+    text      = tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
+    inputs    = tokenizer(text, return_tensors="pt").to(model.device)
     input_len = inputs["input_ids"].shape[1]
 
     t0 = time.time()
@@ -185,14 +187,13 @@ def generate_sql(schema_sql: str, question: str, max_new_tokens: int = 256) -> t
         )
     latency = time.time() - t0
 
-    generated_ids = outputs[0][input_len:]
-    sql = tokenizer.decode(generated_ids, skip_special_tokens=True).strip()
+    sql = tokenizer.decode(outputs[0][input_len:], skip_special_tokens=True).strip()
     sql = sql.replace("```sql", "").replace("```", "").strip()
     return sql, latency
 
 
 # =============================================================================
-# CELL 6 — DuckDB sandbox (identical to baseline eval)
+# CELL 6 — DuckDB sandbox
 # =============================================================================
 
 # %%
@@ -232,10 +233,10 @@ def _infer_value(col_def: str, row_idx: int) -> str:
 def build_sandbox(schema: dict) -> duckdb.DuckDBPyConnection:
     conn = duckdb.connect(":memory:")
     for table_name, table_info in schema["tables"].items():
-        col_defs = []
-        for col in table_info["columns"]:
-            clean = col.split(" FK(")[0].replace(" PK", "").strip()
-            col_defs.append(f"  {clean}")
+        col_defs = [
+            f"  {col.split(' FK(')[0].replace(' PK', '').strip()}"
+            for col in table_info["columns"]
+        ]
         try:
             conn.execute(f"CREATE TABLE {table_name} (\n" + ",\n".join(col_defs) + "\n);")
         except Exception:
@@ -254,8 +255,7 @@ def build_sandbox(schema: dict) -> duckdb.DuckDBPyConnection:
 
 def execute_sql(conn: duckdb.DuckDBPyConnection, sql: str) -> tuple[bool, list | None, str]:
     try:
-        result = conn.execute(sql).fetchall()
-        return True, result, ""
+        return True, conn.execute(sql).fetchall(), ""
     except Exception as e:
         return False, None, str(e)
 
@@ -277,14 +277,14 @@ def results_match(a: list | None, b: list | None) -> bool:
 
 # =============================================================================
 # CELL 7 — Run eval loop
-# Runtime: ~15-25 minutes for 68 questions on T4
+# GPU: ~15-25 min. CPU: several hours (consider running overnight).
 # =============================================================================
 
 # %%
 results = []
-errors  = {"api": 0, "sql": 0}
+errors  = {"gen": 0, "sql": 0}
 
-print(f"Running post-training eval on {len(examples)} examples...\n")
+print(f"Running eval on {len(examples)} examples...\n")
 
 for i, ex in enumerate(examples, 1):
     schema = schemas.get(ex["schema_name"])
@@ -295,10 +295,10 @@ for i, ex in enumerate(examples, 1):
     try:
         gen_sql, latency = generate_sql(schema["create_sql"], ex["question"])
     except Exception as e:
-        errors["api"] += 1
+        errors["gen"] += 1
         print(f"  [{i:02d}] ERROR: {e}")
         results.append({**ex, "generated_sql": "", "valid_sql": False,
-                        "exec_match": False, "latency_s": 0.0, "error": str(e)})
+                        "exec_match": False, "latency_s": 0.0, "gen_error": str(e)})
         continue
 
     conn = build_sandbox(schema)
@@ -327,7 +327,7 @@ for i, ex in enumerate(examples, 1):
     print(f"  [{i:02d}/{len(examples)}] {status} | {ex['complexity']:<6} | "
           f"{latency:.1f}s | {ex['question'][:55]}")
 
-print(f"\nDone. Errors -> generation: {errors['api']} | SQL exec: {errors['sql']}")
+print(f"\nDone. Errors -> generation: {errors['gen']} | invalid SQL: {errors['sql']}")
 
 
 # =============================================================================
@@ -335,27 +335,30 @@ print(f"\nDone. Errors -> generation: {errors['api']} | SQL exec: {errors['sql']
 # =============================================================================
 
 # %%
+# v1 fine-tuned (Day 6 smoke test) — delta shows v1 → v2 improvement.
+# Pre-training Qwen2.5-7B baseline: easy 81.0 | medium 34.6 | hard 33.3 | overall 48.5
 BASELINE = {
-    "easy":   81.0,
-    "medium": 34.6,
-    "hard":   33.3,
-    "overall": 48.5,
+    "easy":    85.7,   # v1: 18/21
+    "medium":  38.5,   # v1: 10/26
+    "hard":    33.3,   # v1: 7/21
+    "overall": 51.5,   # v1: 35/68
 }
+
 
 def compute_and_print_results(results: list, model_tag: str) -> dict:
     by_c = defaultdict(list)
     for r in results:
         by_c[r["complexity"]].append(r)
 
-    n = len(results)
+    n             = len(results)
     overall_acc   = sum(1 for r in results if r["exec_match"]) / n * 100
     overall_valid = sum(1 for r in results if r["valid_sql"]) / n * 100
     avg_latency   = sum(r["latency_s"] for r in results) / n
 
     print("\n" + "=" * 72)
-    print(f"POST-TRAINING RESULTS -- {model_tag}")
+    print(f"POST-TRAINING RESULTS — {model_tag}")
     print("=" * 72)
-    print(f"{'Complexity':<12} {'N':>4} {'Valid SQL':>10} {'Exec Acc':>10} {'vs Baseline':>12}")
+    print(f"{'Complexity':<12} {'N':>4} {'Valid SQL':>10} {'Exec Acc':>10} {'vs v1':>10}")
     print("-" * 72)
 
     summary = {"model": model_tag, "total": n}
@@ -369,40 +372,38 @@ def compute_and_print_results(results: list, model_tag: str) -> dict:
         acc   = sum(1 for r in group if r["exec_match"]) / bn * 100
         delta = acc - BASELINE.get(bucket, 0)
         delta_str = f"+{delta:.1f}%" if delta >= 0 else f"{delta:.1f}%"
-        print(f"  {bucket:<10} {bn:>4} {valid:>9.1f}% {acc:>9.1f}% {delta_str:>12}")
+        print(f"  {bucket:<10} {bn:>4} {valid:>9.1f}% {acc:>9.1f}% {delta_str:>10}")
         summary[f"valid_sql_{bucket}"]     = round(valid, 1)
         summary[f"exec_accuracy_{bucket}"] = round(acc, 1)
-        summary[f"delta_{bucket}"]         = round(delta, 1)
+        summary[f"delta_vs_v1_{bucket}"]   = round(delta, 1)
 
     delta_overall = overall_acc - BASELINE["overall"]
     delta_str = f"+{delta_overall:.1f}%" if delta_overall >= 0 else f"{delta_overall:.1f}%"
     print("-" * 72)
-    print(f"  {'OVERALL':<10} {n:>4} {overall_valid:>9.1f}% {overall_acc:>9.1f}% {delta_str:>12}")
+    print(f"  {'OVERALL':<10} {n:>4} {overall_valid:>9.1f}% {overall_acc:>9.1f}% {delta_str:>10}")
     print("=" * 72)
-    print(f"\nAvg latency per query: {avg_latency:.2f}s")
+    print(f"\nAvg latency: {avg_latency:.2f}s/query")
 
-    targets_hit = []
     if overall_acc >= 84:
-        targets_hit.append("overall >=84% [TARGET MET]")
-    if summary.get("exec_accuracy_hard", 0) >= 71:
-        targets_hit.append("hard >=71% [TARGET MET]")
-    if targets_hit:
-        print("\nResume targets: " + " | ".join(targets_hit))
+        print("OVERALL TARGET MET: >=84%")
     else:
-        hard_acc = summary.get("exec_accuracy_hard", 0)
-        print(f"\nResume targets: overall needs {84 - overall_acc:.1f}pp more | "
-              f"hard needs {71 - hard_acc:.1f}pp more")
+        print(f"Overall still needs {84 - overall_acc:.1f}pp to hit 84% target.")
+    hard_acc = summary.get("exec_accuracy_hard", 0)
+    if hard_acc >= 71:
+        print("HARD TARGET MET: >=71%")
+    else:
+        print(f"Hard still needs {71 - hard_acc:.1f}pp to hit 71% target.")
 
     summary.update({
         "valid_sql_overall":     round(overall_valid, 1),
         "exec_accuracy_overall": round(overall_acc, 1),
-        "delta_overall":         round(delta_overall, 1),
+        "delta_vs_v1_overall":   round(delta_overall, 1),
         "avg_latency_s":         round(avg_latency, 2),
     })
     return summary
 
 
-summary = compute_and_print_results(results, "Qwen2.5-7B-QLoRA")
+summary = compute_and_print_results(results, "Qwen2.5-7B-QLoRA-v2")
 
 
 # =============================================================================
@@ -410,35 +411,34 @@ summary = compute_and_print_results(results, "Qwen2.5-7B-QLoRA")
 # =============================================================================
 
 # %%
-import datetime
+OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 ts = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
 
-results_file = OUTPUT_DIR / f"finetuned_qwen25_7b_{ts}.jsonl"
+results_file = OUTPUT_DIR / f"finetuned_v2_qwen25_7b_{ts}.jsonl"
+summary_file = OUTPUT_DIR / f"finetuned_v2_summary_{ts}.json"
+
 with open(results_file, "w") as f:
     for r in results:
         f.write(json.dumps(r) + "\n")
 
-summary_file = OUTPUT_DIR / f"finetuned_summary_{ts}.json"
 with open(summary_file, "w") as f:
     json.dump(summary, f, indent=2)
 
-print(f"Results saved:")
-print(f"  Per-question: {results_file.name}")
-print(f"  Summary:      {summary_file.name}")
-print(f"\nDownload from Kaggle Output tab -> save to data/eval/results/ locally")
+print(f"Results -> {results_file}")
+print(f"Summary -> {summary_file}")
 
 
 # =============================================================================
-# CELL 10 — Show failures (what to target in second training run)
+# CELL 10 — Show top failures
 # =============================================================================
 
 # %%
 failures = [r for r in results if not r["exec_match"]]
-print(f"\nFailed questions ({len(failures)}/{len(results)}):\n")
+print(f"\nFailed: {len(failures)}/{len(results)}\n")
 for r in failures[:10]:
     print(f"[{r['complexity']}] {r['question']}")
-    print(f"  Reference: {r['reference_sql'][:80]}...")
-    print(f"  Generated: {r['generated_sql'][:80]}...")
+    print(f"  Ref: {r['reference_sql'][:80]}")
+    print(f"  Gen: {r['generated_sql'][:80]}")
     if r["gen_error"]:
-        print(f"  Error:     {r['gen_error'][:80]}")
+        print(f"  Err: {r['gen_error'][:80]}")
     print()

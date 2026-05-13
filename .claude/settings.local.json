@@ -4,7 +4,16 @@
       "PowerShell(Get-ChildItem \"C:\\\\Users\\\\admin\\\\Documents\\\\DS Projects\\\\text-to-sql\" | Where-Object { $_.Name -ne \".venv\" } | Format-Table Name, LastWriteTime -AutoSize)",
       "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); print\\(json.dumps\\({'name':d['name'],'tables':list\\(d['tables'].keys\\(\\)\\),'create_sql':d['create_sql'][:500]}, indent=2\\)\\)\")",
       "Bash(python3 -c \"import sys,json; [print\\(json.dumps\\(json.loads\\(l\\), indent=2\\)\\) for l in sys.stdin]\")",
-      "Bash(python3 -c ' *)"
+      "Bash(python3 -c ' *)",
+      "Bash(python -c ' *)",
+      "Bash(python -c \"import peft; import transformers; print\\('peft:', peft.__version__\\); print\\('transformers:', transformers.__version__\\)\")",
+      "Bash(pip install *)",
+      "Bash(pip uninstall *)",
+      "PowerShell(Get-ChildItem \"C:\\\\Users\\\\admin\\\\AppData\\\\Local\\\\Programs\\\\Python\\\\Python312\\\\Lib\\\\site-packages\" | Where-Object { $_.Name -match \"^\\\\~\" } | ForEach-Object { Write-Host $_.FullName })",
+      "Bash(python -c \"import transformers; import peft; print\\('transformers:', transformers.__version__\\); print\\('peft:', peft.__version__\\)\")",
+      "PowerShell(python -c \"import transformers; import peft; print\\('transformers:', transformers.__version__\\); print\\('peft:', peft.__version__\\)\")",
+      "PowerShell(pip install *)",
+      "Bash(python scripts/generate_style_aligned.py --dry-run)"
     ]
   }
 }

@@ -59,7 +59,9 @@ SCHEMA_DIR  = ROOT / "data" / "raw" / "schemas"
 PROC_DIR    = ROOT / "data" / "processed"
 EVAL_DIR    = ROOT / "data" / "eval"
 
-SYNTHETIC_FILE = PROC_DIR / "layer2_synthetic.jsonl"
+LAYER2_FILE    = PROC_DIR / "layer2_synthetic.jsonl"
+LAYER3_FILE    = PROC_DIR / "layer3_hard_negatives.jsonl"
+LAYER4_FILE    = PROC_DIR / "layer4_style_aligned.jsonl"
 TRAIN_FILE     = PROC_DIR / "train.jsonl"
 VAL_FILE       = PROC_DIR / "val.jsonl"
 SUMMARY_FILE   = PROC_DIR / "dataset_summary.json"
@@ -294,12 +296,23 @@ def main() -> None:
     schemas = load_schemas()
     print(f"Loaded {len(schemas)} schemas.")
 
-    # ── 2. Load synthetic data ────────────────────────────────────────────────
-    if not SYNTHETIC_FILE.exists():
-        raise SystemExit(f"Synthetic data not found: {SYNTHETIC_FILE}\nRun scripts/generate_synthetic.py first.")
+    # ── 2. Load all data layers ───────────────────────────────────────────────
+    if not LAYER2_FILE.exists():
+        raise SystemExit(f"Layer 2 not found: {LAYER2_FILE}\nRun scripts/generate_synthetic.py first.")
 
-    raw_examples = load_jsonl(SYNTHETIC_FILE)
-    print(f"Loaded {len(raw_examples)} raw synthetic examples.")
+    raw_examples = load_jsonl(LAYER2_FILE)
+    print(f"Layer 2 (synthetic):       {len(raw_examples)}")
+
+    for layer_file, label in [(LAYER3_FILE, "Layer 3 (hard negatives)"),
+                               (LAYER4_FILE, "Layer 4 (style aligned)")]:
+        if layer_file.exists():
+            extras = load_jsonl(layer_file)
+            raw_examples.extend(extras)
+            print(f"{label}: {len(extras)}")
+        else:
+            print(f"{label}: not found — skipping")
+
+    print(f"Total raw examples:        {len(raw_examples)}")
 
     # ── 3. Format into chat messages ──────────────────────────────────────────
     formatted: list[dict] = []

@@ -1,42 +1,42 @@
 {
   "seed": 42,
   "val_fraction": 0.1,
-  "total": 1137,
-  "train": 1023,
-  "val": 114,
+  "total": 2636,
+  "train": 2372,
+  "val": 264,
   "golden_eval": 68,
   "train_by_complexity": {
-    "medium": 409,
-    "hard": 409,
+    "hard": 1345,
+    "medium": 822,
     "easy": 205
   },
   "val_by_complexity": {
-    "easy": 23,
-    "medium": 45,
-    "hard": 46
+    "hard": 150,
+    "medium": 91,
+    "easy": 23
   },
   "train_by_schema": {
-    "lending_v1": 168,
-    "logistics_v1": 69,
-    "insurance_v1": 180,
-    "payments_v1": 76,
-    "subscription_ecom_v1": 74,
-    "saas_metrics_v1": 73,
-    "neobank_v1": 67,
-    "investment_v1": 175,
-    "retail_analytics_v1": 69,
-    "marketplace_v1": 72
+    "retail_analytics_v1": 136,
+    "payments_v1": 147,
+    "insurance_v1": 526,
+    "investment_v1": 514,
+    "lending_v1": 335,
+    "neobank_v1": 141,
+    "logistics_v1": 142,
+    "subscription_ecom_v1": 146,
+    "marketplace_v1": 143,
+    "saas_metrics_v1": 142
   },
   "val_by_schema": {
-    "investment_v1": 23,
-    "insurance_v1": 19,
-    "payments_v1": 3,
-    "lending_v1": 28,
-    "marketplace_v1": 5,
-    "saas_metrics_v1": 7,
-    "retail_analytics_v1": 7,
-    "logistics_v1": 8,
-    "neobank_v1": 9,
-    "subscription_ecom_v1": 5
+    "investment_v1": 63,
+    "saas_metrics_v1": 18,
+    "insurance_v1": 53,
+    "lending_v1": 41,
+    "subscription_ecom_v1": 13,
+    "retail_analytics_v1": 20,
+    "logistics_v1": 15,
+    "marketplace_v1": 14,
+    "neobank_v1": 15,
+    "payments_v1": 12
   }
 }
