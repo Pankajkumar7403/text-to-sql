@@ -15,6 +15,10 @@ def _schema_dir() -> Path:
     env_path = os.getenv("SCHEMA_DIR")
     if env_path:
         return Path(env_path)
+    # HF Spaces bundle: repo/schemas; local dev: data/raw/schemas
+    for candidate in (ROOT / "schemas", ROOT / "data" / "raw" / "schemas"):
+        if candidate.is_dir() and any(candidate.glob("*.json")):
+            return candidate
     return ROOT / "data" / "raw" / "schemas"
 
 

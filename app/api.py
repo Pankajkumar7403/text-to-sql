@@ -16,12 +16,16 @@ import duckdb
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, Field
 
+from app.errors import InferenceUserError
 from app.model import generate_sql
 from app.schemas_loader import load_all_schemas
 
 app = FastAPI(
     title="Text-to-SQL API",
-    description="QLoRA fine-tuned Qwen2.5-7B-Instruct → natural language to SQL.",
+    description=(
+        "Natural language to SQL. On Hugging Face Spaces, live generation uses the Groq API "
+        "so the demo fits CPU RAM; the QLoRA-fine-tuned adapter is published on the Hub."
+    ),
     version="0.2.0",
 )
 
@@ -97,7 +101,11 @@ def generate(req: GenerateRequest):
     if not schema:
         raise HTTPException(status_code=404, detail=f"Schema '{req.schema_name}' not found.")
 
-    sql, latency = generate_sql(schema["create_sql"], req.question, req.max_new_tokens)
+    try:
+        sql, latency = generate_sql(schema["create_sql"], req.question, req.max_new_tokens)
+    except InferenceUserError as e:
+        raise HTTPException(status_code=503, detail=e.message) from e
+
     valid, error = _validate(schema["create_sql"], sql)
 
     return GenerateResponse(sql=sql, latency_s=latency, valid_sql=valid, error=error)

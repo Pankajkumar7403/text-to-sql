@@ -7,15 +7,17 @@ Run locally:  python app/demo.py
 HF Spaces:    entry via app.py at repo root
 """
 
-import json
+import logging
+
 import duckdb
 import gradio as gr
-from pathlib import Path
 
+from app.errors import InferenceUserError
 from app.model import generate_sql, load_model
 from app.schemas_loader import load_all_schemas
 
-ROOT    = Path(__file__).parent.parent
+logger = logging.getLogger(__name__)
+
 schemas = load_all_schemas()
 NAMES   = sorted(schemas.keys())
 load_model()
@@ -39,7 +41,10 @@ def run(schema_name: str, question: str) -> tuple[str, str]:
     if not schema:
         return "", f"Schema '{schema_name}' not found."
 
-    sql, latency = generate_sql(schema["create_sql"], question)
+    try:
+        sql, latency = generate_sql(schema["create_sql"], question)
+    except InferenceUserError as e:
+        return "", e.message
 
     try:
         conn = duckdb.connect(":memory:")
@@ -48,7 +53,9 @@ def run(schema_name: str, question: str) -> tuple[str, str]:
         conn.close()
         status = f"Valid SQL  ·  {latency:.1f}s"
     except Exception as e:
-        status = f"SQL error: {e}  ·  {latency:.1f}s"
+        logger.debug("DuckDB validation failed: %s", e)
+        err_one = (str(e).splitlines() or [str(e)])[0][:200]
+        status = f"SQL did not run in sandbox: {err_one}  ·  {latency:.1f}s"
 
     return sql, status
 
@@ -131,9 +138,12 @@ ORDER BY month
 # ── UI ─────────────────────────────────────────────────────────────────────────
 
 with gr.Blocks(title="Text-to-SQL | Qwen2.5-7B") as demo:
-    gr.Markdown("## Text-to-SQL — Qwen2.5-7B QLoRA\n"
-                "Fine-tuned on 10 business domains. "
-                "Select a schema, type a question, get SQL.")
+    gr.Markdown(
+        "## Text-to-SQL — Qwen2.5-7B QLoRA\n"
+        "Fine-tuned on 10 business domains. **Live Demo** calls the Groq API (no 7B weights in "
+        "this container); **Fine-tuned Results** + Hub adapter document the trained model.\n\n"
+        "Select a schema, type a question, get SQL."
+    )
 
     with gr.Tabs():
 

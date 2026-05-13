@@ -1,0 +1,71 @@
+{
+  "name": "saas_metrics_v1",
+  "domain": "ecommerce",
+  "description": "SaaS product usage and revenue metrics",
+  "tables": {
+    "accounts": {
+      "columns": [
+        "account_id INT PK",
+        "company_name VARCHAR",
+        "industry VARCHAR",
+        "employee_count INT",
+        "arr DECIMAL(12,2)",
+        "created_at DATE"
+      ]
+    },
+    "users": {
+      "columns": [
+        "user_id INT PK",
+        "account_id INT FK(accounts)",
+        "email VARCHAR",
+        "role VARCHAR",
+        "last_login TIMESTAMP",
+        "is_admin BOOL"
+      ]
+    },
+    "features": {
+      "columns": [
+        "feature_id INT PK",
+        "name VARCHAR",
+        "tier VARCHAR",
+        "release_date DATE"
+      ],
+      "sample_values": {
+        "tier": [
+          "free",
+          "pro",
+          "enterprise"
+        ]
+      }
+    },
+    "feature_usage": {
+      "columns": [
+        "usage_id INT PK",
+        "user_id INT FK(users)",
+        "feature_id INT FK(features)",
+        "used_at TIMESTAMP",
+        "session_seconds INT"
+      ]
+    },
+    "contracts": {
+      "columns": [
+        "contract_id INT PK",
+        "account_id INT FK(accounts)",
+        "start_date DATE",
+        "end_date DATE",
+        "mrr DECIMAL(10,2)",
+        "status VARCHAR",
+        "renewal_probability DECIMAL(4,2)"
+      ],
+      "sample_values": {
+        "status": [
+          "active",
+          "at_risk",
+          "churned",
+          "renewed"
+        ]
+      }
+    }
+  },
+  "create_sql": "-- Schema: saas_metrics_v1 (SaaS product usage and revenue metrics)\n\nCREATE TABLE accounts (\n  account_id INT PK,\n  company_name VARCHAR,\n  industry VARCHAR,\n  employee_count INT,\n  arr DECIMAL(12,2),\n  created_at DATE\n);\n\nCREATE TABLE users (\n  user_id INT PK,\n  account_id INT FK(accounts),\n  email VARCHAR,\n  role VARCHAR,\n  last_login TIMESTAMP,\n  is_admin BOOL\n);\n\nCREATE TABLE features (\n  feature_id INT PK,\n  name VARCHAR,\n  tier VARCHAR,\n  release_date DATE\n);\n\nCREATE TABLE feature_usage (\n  usage_id INT PK,\n  user_id INT FK(users),\n  feature_id INT FK(features),\n  used_at TIMESTAMP,\n  session_seconds INT\n);\n\nCREATE TABLE contracts (\n  contract_id INT PK,\n  account_id INT FK(accounts),\n  start_date DATE,\n  end_date DATE,\n  mrr DECIMAL(10,2),\n  status VARCHAR,\n  renewal_probability DECIMAL(4,2)\n);\n"
+}

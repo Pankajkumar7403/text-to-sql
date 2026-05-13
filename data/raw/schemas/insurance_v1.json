@@ -1,0 +1,90 @@
+{
+  "name": "insurance_v1",
+  "domain": "fintech",
+  "description": "Digital insurance with policies, claims, and agents",
+  "tables": {
+    "policyholders": {
+      "columns": [
+        "holder_id INT PK",
+        "full_name VARCHAR",
+        "dob DATE",
+        "email VARCHAR",
+        "city VARCHAR",
+        "occupation VARCHAR"
+      ]
+    },
+    "insurance_products": {
+      "columns": [
+        "product_id INT PK",
+        "name VARCHAR",
+        "type VARCHAR",
+        "min_premium DECIMAL(10,2)",
+        "max_sum_insured DECIMAL(14,2)",
+        "tenure_years INT"
+      ],
+      "sample_values": {
+        "type": [
+          "term_life",
+          "health",
+          "motor",
+          "travel",
+          "home"
+        ]
+      }
+    },
+    "policies": {
+      "columns": [
+        "policy_id INT PK",
+        "holder_id INT FK(policyholders)",
+        "product_id INT FK(insurance_products)",
+        "sum_insured DECIMAL(14,2)",
+        "premium_annual DECIMAL(10,2)",
+        "start_date DATE",
+        "end_date DATE",
+        "status VARCHAR"
+      ],
+      "sample_values": {
+        "status": [
+          "active",
+          "lapsed",
+          "cancelled",
+          "expired",
+          "claimed"
+        ]
+      }
+    },
+    "claims": {
+      "columns": [
+        "claim_id INT PK",
+        "policy_id INT FK(policies)",
+        "claim_type VARCHAR",
+        "claim_amount DECIMAL(12,2)",
+        "filed_date DATE",
+        "status VARCHAR",
+        "settled_amount DECIMAL(12,2)",
+        "settled_date DATE"
+      ],
+      "sample_values": {
+        "status": [
+          "filed",
+          "under_review",
+          "approved",
+          "rejected",
+          "paid"
+        ]
+      }
+    },
+    "agents": {
+      "columns": [
+        "agent_id INT PK",
+        "name VARCHAR",
+        "license_no VARCHAR",
+        "region VARCHAR",
+        "active_policies INT",
+        "commission_pct DECIMAL(4,2)",
+        "joined_date DATE"
+      ]
+    }
+  },
+  "create_sql": "-- Schema: insurance_v1 (Digital insurance with policies, claims, and agents)\n\nCREATE TABLE policyholders (\n  holder_id INT PK,\n  full_name VARCHAR,\n  dob DATE,\n  email VARCHAR,\n  city VARCHAR,\n  occupation VARCHAR\n);\n\nCREATE TABLE insurance_products (\n  product_id INT PK,\n  name VARCHAR,\n  type VARCHAR,\n  min_premium DECIMAL(10,2),\n  max_sum_insured DECIMAL(14,2),\n  tenure_years INT\n);\n\nCREATE TABLE policies (\n  policy_id INT PK,\n  holder_id INT FK(policyholders),\n  product_id INT FK(insurance_products),\n  sum_insured DECIMAL(14,2),\n  premium_annual DECIMAL(10,2),\n  start_date DATE,\n  end_date DATE,\n  status VARCHAR\n);\n\nCREATE TABLE claims (\n  claim_id INT PK,\n  policy_id INT FK(policies),\n  claim_type VARCHAR,\n  claim_amount DECIMAL(12,2),\n  filed_date DATE,\n  status VARCHAR,\n  settled_amount DECIMAL(12,2),\n  settled_date DATE\n);\n\nCREATE TABLE agents (\n  agent_id INT PK,\n  name VARCHAR,\n  license_no VARCHAR,\n  region VARCHAR,\n  active_policies INT,\n  commission_pct DECIMAL(4,2),\n  joined_date DATE\n);\n"
+}

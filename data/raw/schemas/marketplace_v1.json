@@ -1,0 +1,95 @@
+{
+  "name": "marketplace_v1",
+  "domain": "ecommerce",
+  "description": "Multi-vendor marketplace with sellers, products, orders",
+  "tables": {
+    "users": {
+      "columns": [
+        "user_id INT PK",
+        "email VARCHAR",
+        "full_name VARCHAR",
+        "created_at TIMESTAMP",
+        "country VARCHAR",
+        "is_active BOOL"
+      ],
+      "sample_values": {
+        "country": [
+          "IN",
+          "US",
+          "UK"
+        ],
+        "is_active": [
+          true,
+          false
+        ]
+      }
+    },
+    "sellers": {
+      "columns": [
+        "seller_id INT PK",
+        "user_id INT FK(users)",
+        "shop_name VARCHAR",
+        "rating DECIMAL(3,2)",
+        "total_sales INT",
+        "joined_at TIMESTAMP"
+      ]
+    },
+    "categories": {
+      "columns": [
+        "category_id INT PK",
+        "name VARCHAR",
+        "parent_id INT FK(categories)"
+      ]
+    },
+    "products": {
+      "columns": [
+        "product_id INT PK",
+        "seller_id INT FK(sellers)",
+        "category_id INT FK(categories)",
+        "title VARCHAR",
+        "price DECIMAL(10,2)",
+        "stock_qty INT",
+        "created_at TIMESTAMP",
+        "is_listed BOOL"
+      ]
+    },
+    "orders": {
+      "columns": [
+        "order_id INT PK",
+        "user_id INT FK(users)",
+        "status VARCHAR",
+        "total_amount DECIMAL(10,2)",
+        "created_at TIMESTAMP",
+        "shipped_at TIMESTAMP"
+      ],
+      "sample_values": {
+        "status": [
+          "pending",
+          "shipped",
+          "delivered",
+          "cancelled"
+        ]
+      }
+    },
+    "order_items": {
+      "columns": [
+        "item_id INT PK",
+        "order_id INT FK(orders)",
+        "product_id INT FK(products)",
+        "quantity INT",
+        "unit_price DECIMAL(10,2)"
+      ]
+    },
+    "reviews": {
+      "columns": [
+        "review_id INT PK",
+        "product_id INT FK(products)",
+        "user_id INT FK(users)",
+        "rating INT",
+        "body TEXT",
+        "created_at TIMESTAMP"
+      ]
+    }
+  },
+  "create_sql": "-- Schema: marketplace_v1 (Multi-vendor marketplace with sellers, products, orders)\n\nCREATE TABLE users (\n  user_id INT PK,\n  email VARCHAR,\n  full_name VARCHAR,\n  created_at TIMESTAMP,\n  country VARCHAR,\n  is_active BOOL\n);\n\nCREATE TABLE sellers (\n  seller_id INT PK,\n  user_id INT FK(users),\n  shop_name VARCHAR,\n  rating DECIMAL(3,2),\n  total_sales INT,\n  joined_at TIMESTAMP\n);\n\nCREATE TABLE categories (\n  category_id INT PK,\n  name VARCHAR,\n  parent_id INT FK(categories)\n);\n\nCREATE TABLE products (\n  product_id INT PK,\n  seller_id INT FK(sellers),\n  category_id INT FK(categories),\n  title VARCHAR,\n  price DECIMAL(10,2),\n  stock_qty INT,\n  created_at TIMESTAMP,\n  is_listed BOOL\n);\n\nCREATE TABLE orders (\n  order_id INT PK,\n  user_id INT FK(users),\n  status VARCHAR,\n  total_amount DECIMAL(10,2),\n  created_at TIMESTAMP,\n  shipped_at TIMESTAMP\n);\n\nCREATE TABLE order_items (\n  item_id INT PK,\n  order_id INT FK(orders),\n  product_id INT FK(products),\n  quantity INT,\n  unit_price DECIMAL(10,2)\n);\n\nCREATE TABLE reviews (\n  review_id INT PK,\n  product_id INT FK(products),\n  user_id INT FK(users),\n  rating INT,\n  body TEXT,\n  created_at TIMESTAMP\n);\n"
+}
